@@ -1,0 +1,17 @@
+sample	read1	read2
+1428_PAR	data/1428_PAR_S8_L004_R1_001.fastq.gz	data/1428_PAR_S8_L004_R2_001.fastq.gz
+1428_RES	data/1428_RES_S9_L004_R1_001.fastq.gz	data/1428_RES_S9_L004_R2_001.fastq.gz
+361_PAR	data/361_PAR_S1_L001_R1_001.fastq.gz	data/361_PAR_S1_L001_R2_001.fastq.gz
+361_RES	data/361_RES_S2_L001_R1_001.fastq.gz	data/361_RES_S2_L001_R2_001.fastq.gz
+CAMA1_PAR	data/CAMA1_PAR_S3_L001_R1_001.fastq.gz	data/CAMA1_PAR_S3_L001_R2_001.fastq.gz
+CAMA1_RES	data/CAMA1_RES_S4_L001_R1_001.fastq.gz	data/CAMA1_RES_S4_L001_R2_001.fastq.gz
+KPL1_PAR	data/KPL1_PAR_S2_L003_R1_001.fastq.gz	data/KPL1_PAR_S2_L003_R2_001.fastq.gz
+KPL1_RES	data/KPL1_RES_S3_L003_R1_001.fastq.gz	data/KPL1_RES_S3_L003_R2_001.fastq.gz
+LY2_PAR	data/LY2_PAR_S6_L004_R1_001.fastq.gz	data/LY2_PAR_S6_L004_R2_001.fastq.gz
+LY2_RES	data/LY2_RES_S7_L004_R1_001.fastq.gz	data/LY2_RES_S7_L004_R2_001.fastq.gz
+MCF7_PAR	data/MCF7_PAR_S5_L001_R1_001.fastq.gz	data/MCF7_PAR_S5_L001_R2_001.fastq.gz
+MCF7_RES	data/MCF7_RES_S1_L003_R1_001.fastq.gz	data/MCF7_RES_S1_L003_R2_001.fastq.gz
+T47D_PAR	data/T47D_PAR_S4_L003_R1_001.fastq.gz	data/T47D_PAR_S4_L003_R2_001.fastq.gz
+T47D_RES	data/T47D_RES_S5_L004_R1_001.fastq.gz	data/T47D_RES_S5_L004_R2_001.fastq.gz
+ZR_PAR	data/ZR_PAR_S10_L004_R1_001.fastq.gz	data/ZR_PAR_S10_L004_R2_001.fastq.gz
+ZR_RES	data/ZR_RES_S11_L004_R1_001.fastq.gz	data/ZR_RES_S11_L004_R2_001.fastq.gz

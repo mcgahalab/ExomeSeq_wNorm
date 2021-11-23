@@ -1,0 +1,9 @@
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - r-sequenza
+  - r-optparse
+  - bioconductor-genomicranges
+  - sequenza-utils

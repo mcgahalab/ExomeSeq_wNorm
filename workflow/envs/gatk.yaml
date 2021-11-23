@@ -1,0 +1,7 @@
+channels:
+  - conda-forge
+  - compbiocore
+  - bioconda
+dependencies:
+  - gatk ==3.8
+  - vcftools ==0.1.16

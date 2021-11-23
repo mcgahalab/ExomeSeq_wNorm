@@ -1,0 +1,8 @@
+channels:
+  - bioconda
+  - conda-forge
+dependencies:
+  - bwa ==0.7.17
+  - samtools ==1.9
+  - picard ==2.26.0
+  - java-jdk ==8.0.112

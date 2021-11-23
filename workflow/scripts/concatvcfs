@@ -1,0 +1,37 @@
+#!/bin/bash
+#
+#$ -cwd
+#$ -S /bin/bash
+#
+# USAGE: sh mergeVCFs vcf1 vcf2 ... > out.vcf
+
+module load tabix/0.2.6
+module load vcftools/0.1.12
+
+echo "$@" > $1$'_TMP_files.txt'
+
+for file in $(cat $1$'_TMP_files.txt');do
+
+bgzip $file
+tabix -f $file.gz
+
+done
+
+line=""
+
+for file in $(cat $1$'_TMP_files.txt');do
+
+line=$line"  "$file.gz
+
+done
+
+vcf-concat $line
+
+
+for file in $(cat $1$'_TMP_files.txt');do
+
+gunzip $file.gz
+
+done
+
+rm $1$'_TMP_files.txt'

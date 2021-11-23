@@ -1,0 +1,11 @@
+channels:
+  - conda-forge
+  - compbiocore
+  - bioconda
+dependencies:
+  - mutect
+  - java-1.7.0-openjdk-cos6-x86_64 1.7.0.181
+  - varscan ==2.4.4
+  - samtools ==1.9
+  - vcftools ==0.1.16
+  - tabix ==0.2.6

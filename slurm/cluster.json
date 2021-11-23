@@ -1,0 +1,94 @@
+__default__:
+  mem : 8G
+  cpus-per-task : 1
+  partition : 'all'
+  time : 08:00:00
+
+mapFASTQ:
+  cpus-per-task : 4
+  mem : 12G
+  time : 3-00:00:00
+
+samtoolsSORT:
+  cpus-per-task : 2
+  mem : 12G
+
+picardMarkDuplicates:
+  cpus-per-task : 4
+  mem : 20G
+  time : 1-00:00:00
+
+gatkRealignerTargetCreator:
+  cpus-per-task : 4
+  time : 1-00:00:00
+
+gatkIndelRealigner:
+  cpus-per-task : 2
+  mem : 12G
+
+gatkBaseRecalibrator:
+  cpus-per-task : 4
+  mem : 18G
+  time : 1-00:00:00
+
+gatkPrintReads:
+  cpus-per-task : 4
+  mem : 18G
+  time : 1-00:00:00
+
+MuTect2:
+  cpus-per-task : 2
+
+filterMuTect2:
+  cpus-per-task : 3
+  mem : 10G
+  time : 1-00:00:00
+
+MuTect1:
+  cpus-per-task : 2
+  mem : 10G
+  time : 1-00:00:00
+
+haploGATK:
+  cpus-per-task : 4
+  partition : 'all'
+  time : 1-00:00:00
+
+Strelka:
+  cpus-per-task : 4
+  time : 3-00:00:00
+
+varscanCopyNumber:
+  cpus-per-task : 3
+  mem : 20G
+  time : 1-00:00:00
+
+varscanSomatic:
+  cpus-per-task : 3
+  mem : 20G
+  time : 3-00:00:00
+
+SequenzaFromVarscan:
+  cpus-per-task : 4
+  mem : 20G
+  time : 3-00:00:00
+
+varscanProcessSomatic:
+  cpus-per-task : 4
+  mem : 20G
+  time : 3-00:00:00
+
+varscanToVCF:
+  cpus-per-task : 4
+  mem : 12G
+  time : 1-00:00:00
+
+rule vcftoMAFindel:
+  cpus-per-task : 4
+  mem : 12G
+  time : 5-00:00:00
+
+rule vcftoMAFsnv:
+  cpus-per-task : 4
+  mem : 12G
+  time : 5-00:00:00

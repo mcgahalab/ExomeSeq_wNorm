@@ -1,0 +1,3 @@
+sample_name	unit_name
+A	lane1	data/A.1.fastq.gz	data/A.2.fastq.gz
+B	lane1	data/B.1.fastq.gz	data/B.2.fastq.gz

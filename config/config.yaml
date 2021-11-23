@@ -1,0 +1,19 @@
+sample_file: /cluster/projects/cesconlab/Projects/CDK4-6iRES_ERposBCa/Exome-seq/Palbo-RExomeseq2020/ExomeSeq/config/samples.tsv
+bed_file: /cluster/projects/cesconlab/Projects/CDK4-6iRES_ERposBCa/Exome-seq/Palbo-RExomeseq2020/ExomeSeq/config/hg38_bed.tsv
+indel_vcf: /cluster/projects/cesconlab/Projects/CDK4-6iRES_ERposBCa/Exome-seq/Palbo-RExomeseq2020/ExomeSeq/config/indels.tsv
+snv_vcf: /cluster/projects/cesconlab/Projects/CDK4-6iRES_ERposBCa/Exome-seq/Palbo-RExomeseq2020/ExomeSeq/config/snvs.tsv
+
+intersects:
+    snv:
+        0001: +1
+        0002: +2
+        0003: +3
+    indel:
+        0001: +1
+        0002: +2
+
+# sample_file: /cluster/home/selghamr/workflows/intialize/ExomeSeq/config/samples.tsv
+# bed_file: /cluster/home/selghamr/workflows/intialize/ExomeSeq/config/hg38_bed.tsv
+# indel_vcf: /cluster/home/selghamr/workflows/intialize/ExomeSeq/config/indels.tsv
+# snv_vcf: /cluster/home/selghamr/workflows/intialize/ExomeSeq/config/snvs.tsv
+
