@@ -1,7 +1,7 @@
 rule varscanCopyNumber:
   input:
     ref = 'ref/genome.fa',
-    normal = lambda w: expand("results/alignment/{ctrl}/{ctrl}.realigned.recal.bam", ctrl=get_sample_control(w)),
+    normal =lambda w: expand("results/alignment/{ctrl}/{ctrl}.realigned.recal.bam", ctrl=get_sample_control(w)),
     tumor = "results/alignment/{sample}/{sample}.realigned.recal.bam",
     bed = region
   params:

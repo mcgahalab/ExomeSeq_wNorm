@@ -2,7 +2,7 @@
 rule Sequenza:
   input:
     bam="results/alignment/{sample}/{sample}.realigned.recal.bam",
-    normal= lambda w: expand("results/alignment/{ctrl}/{ctrl}.realigned.recal.bam", ctrl=get_sample_control(w)),
+    normal=lambda w: expand("results/alignment/{ctrl}/{ctrl}.realigned.recal.bam", ctrl=get_sample_control(w)),
   params:
     refgc='ref/GCgenome.wig',
     ref='ref/genome.fa'
