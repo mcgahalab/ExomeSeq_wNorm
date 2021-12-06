@@ -1,4 +1,4 @@
-# Snakemake workflow: rna-seq-star-deseq2
+# Snakemake workflow: ExomeSeq with Normals
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4737358.svg)](https://doi.org/10.5281/zenodo.4737358)
 [![Snakemake](https://img.shields.io/badge/snakemake-≥6.1.0-brightgreen.svg)](https://snakemake.github.io)
@@ -64,9 +64,9 @@ git clone git@github.com:elsamah/ExomeSeq.git
 The basic idea of this workflow is that we set up all the conda-envs using a set output path in our home directory. However, to run the `--create-env-only` command, we need to have a directory set up with all the files needed to execute the entire workflow. In the future, I will add a script to do this automatically, but for now, it must be made manually:
 
 ```
-wflowdir='~/workflow/ExomeSeq'
-mkdir -p ~/workflows/intialize/ExomeSeq
-cd ~/workflows/intialize/ExomeSeq
+wflowdir='~/workflow/ExomeSeq_wNorm'
+mkdir -p ~/workflows/intialize/ExomeSeq_wNorm
+cd ~/workflows/intialize/ExomeSeq_wNorm
 
 mkdir config data resources
 ln -s $(readlink -f ${wflowdir}/scripts) .
@@ -104,13 +104,13 @@ Now that you have your "intialize" and your "project" directory set up, you can 
 Before you build your conda-envs, you'll need to switch the `workdir:` path in your `workflow/Snakefile`:
 ```
 > workflow/Snakefile
-workdir: "/path/to/workflows/intialize/ExomeSeq"
+workdir: "/path/to/workflows/intialize/ExomeSeq_wNorm"
 ```
 
 Once the Snakefile workdir path has been changed, you can run the entire snakemake workflow using `conda-create-envs-only`:
 
 ```
-cd ~/workflow/ExomeSeq
+cd ~/workflow/ExomeSeq_wNorm
 condaprefix=$(readlink -f .)"/.snakemake/conda"
 
 snakemake \
@@ -137,8 +137,8 @@ workdir: "/path/to/group_directory/project"
 
 The `scheduler.sh` script runs the following command in a 5-day long job, with its main purpose to track the job queue and job submission on the slurm cluster.
 ```
-cd ~/workflows/ExomeSeq
-condaprefix='/cluster/home/selghamr/workflows/ExomeSeq/.snakemake/conda'
+cd ~/workflows/ExomeSeq_wNorm
+condaprefix='/cluster/home/selghamr/workflows/ExomeSeq_wNorm/.snakemake/conda'
 
 snakemake \
 --jobs 6 \
