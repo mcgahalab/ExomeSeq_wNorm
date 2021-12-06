@@ -3,7 +3,7 @@ rule Strelka:
     tumor="results/alignment/{sample}/{sample}.realigned.recal.bam",
     ref = 'ref/genome.fa',
     conf="config/strelka_config_bwa.ini",
-    normal=norm,
+    normal=lambda w: expand("results/alignment/{ctrl}/{ctrl}.realigned.recal.bam", ctrl=get_sample_control(w)),
   params:
     strelka="/cluster/home/selghamr/workflows/ExomeSeq/.snakemake/conda/236aa367b1347b9561439ce4facd36c0/share/strelka-2.9.10-1/bin",
     outdir="results/Strelka/{sample}/{sample}",

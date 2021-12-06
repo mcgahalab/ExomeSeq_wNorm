@@ -10,6 +10,27 @@ def get_r1(wildcards):
 def get_r2(wildcards):
     return samples.read2[wildcards.sample]
 
+def is_control(wildcards):
+    control = samples.loc[ (wildcards.sample), "isControl" ]
+    return pd.isna(control) or pd.isnull(control)
+
+def has_a_control(wildcards):
+    # Assumes samples are in [SAMPLE]_[CELLTYPE]_[ANTIBODY] format
+    control = samples.loc[ (wildcards.sample), "control" ]
+    if pd.isna(control) or pd.isnull(control):
+        return False
+    else:
+        return control != "_".join([wildcards.sample])
+
+def get_sample_control(wildcards, retself=True):
+    # Assumes control is a [SAMPLE]_[CELLTYPE]_[ANTIBODY] format
+    control = samples.loc[ (wildcards.sample), "control" ]
+    if pd.isna(control) or pd.isnull(control):
+        control = [ wildcards.sample ] if retself else ""
+    else:
+        control = control.split("_")
+    return "_".join(control)
+
 intervals = pd.read_table(
     config["bed_file"]
 ).set_index(

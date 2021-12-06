@@ -1,6 +1,7 @@
 rule MuTect2:
   input:
-    bam = "results/alignment/{sample}/{sample}.realigned.recal.bam",
+    tumor = "results/alignment/{sample}/{sample}.realigned.recal.bam",
+    normal= lambda w: expand("results/alignment/{ctrl}/{ctrl}.realigned.recal.bam", ctrl=get_sample_control(w))
     ref = 'ref/genome.fa',
   params:
     intervals = get_intervals
@@ -16,7 +17,8 @@ rule MuTect2:
     -T MuTect2  \
     -R {input.ref} \
     -L {params.intervals} \
-    --input_file:tumor {input.bam} \
+    --input_file:tumor {input.tumor} \
+    --input_file:normal {input.normal}
     -o {output} \
     """
 

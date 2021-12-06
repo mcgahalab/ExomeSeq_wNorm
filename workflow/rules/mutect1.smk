@@ -1,6 +1,7 @@
 rule MuTect1:
   input:
-    bam = "results/alignment/{sample}/{sample}.realigned.recal.bam",
+    tumor = "results/alignment/{sample}/{sample}.realigned.recal.bam",
+    normal= lambda w: expand("results/alignment/{ctrl}/{ctrl}.realigned.recal.bam", ctrl=get_sample_control(w))
     ref = 'ref/genome.fa',
     interval = region
   output:
@@ -19,7 +20,8 @@ rule MuTect1:
     --analysis_type MuTect \
     -R {input.ref} \
     -L {input.interval} \
-    --input_file:tumor {input.bam} \
+    --input_file:tumor {input.tumor} \
+    --input_file:normal {input.normal}
     --vcf {output.vcf} \
     --out {output.stats} \
     --coverage_file {output.coverage} \
