@@ -38,7 +38,7 @@ intervals = pd.read_table(
 )
 def get_intervals(wildcards):
     inter = wildcards.interval
-    bed = "/cluster/home/selghamr/workflows/ExomeSeq/resources/hg38_bedV6/" + inter + ".bed"
+    bed = "/cluster/home/selghamr/workflows/ExomeSeq_wNorm/resources/hg38_bedV5/" + inter + ".bed"
     return bed
 
 def get_MuTect2_output(wildcards):

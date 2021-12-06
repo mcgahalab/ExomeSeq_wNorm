@@ -33,11 +33,9 @@ output_dir = os.environ.get("output_dir")
 #norm="resources/Pugh_INS_ex_dil_111_AGTACAAG_L005.realigned.recal.bam"
 known_mills="ref/Mills_and_1000G_gold_standard.indels.hg38.vcf"
 known_1000G="ref/1000G_phase1.snps.high_confidence.hg38.vcf"
-region= "resources/S04380110_Covered.headless.bed"
+region= "resources/Agilent_SureSelect_v6.EX.hg38.bed"
 dbsnp= "ref/dbsnp_144.hg38.vcf"
 ref_genome="hg38"
-
-#workdir: "/cluster/projects/mcgahalab/data/mcgahalab/wither_mcgaha_ram/snakemake_workflow/"
 
 
 ##### load rules #####
