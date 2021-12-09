@@ -7,6 +7,7 @@ rule Strelka:
   params:
     strelka="/cluster/home/selghamr/workflows/ExomeSeq/.snakemake/conda/236aa367b1347b9561439ce4facd36c0/share/strelka-2.9.10-1/bin",
     outdir="results/Strelka/{sample}/{sample}",
+    control=has_a_control,
   output:
     dir=directory("results/Strelka/{sample}/{sample}.myAnalysis"),
     indel="results/Strelka/{sample}/{sample}.myAnalysis/results/variants/{sample}_Slk_somatic.indels.vcf.gz",
@@ -18,21 +19,27 @@ rule Strelka:
     "/cluster/home/selghamr/workflows/ExomeSeq/workflow/envs/strelka.yaml",
   shell:
     """
-    ## configuration
-    {params.strelka}/configureStrelkaSomaticWorkflow.py \
-    --normal={input.normal}  \
-    --tumor={input.tumor} \
-    --ref={input.ref} \
-    --config={input.conf} \
-    --runDir={output.dir}
+    if [ '{params.control}' == 'True' ]; then
+        ## configuration
+        {params.strelka}/configureStrelkaSomaticWorkflow.py \
+        --normal={input.normal}  \
+        --tumor={input.tumor} \
+        --ref={input.ref} \
+        --config={input.conf} \
+        --runDir={output.dir}
 
-    ## running pipeline
-    {output.dir}/runWorkflow.py -m local -j 20
+        ## running pipeline
+        {output.dir}/runWorkflow.py -m local -j 20
 
-    echo "Current Dir: "$(pdir)
-    mv {output.dir}/results/variants/somatic.indels.vcf.gz {output.indel}
-    mv {output.dir}/results/variants/somatic.snvs.vcf.gz {output.snv}
-    mv {output.dir}/results/variants/somatic.indels.vcf.gz.tbi {output.indeltbi}
-    mv {output.dir}/results/variants/somatic.snvs.vcf.gz.tbi {output.snvtbi}
+        echo "Current Dir: "$(pdir)
+        mv {output.dir}/results/variants/somatic.indels.vcf.gz {output.indel}
+        mv {output.dir}/results/variants/somatic.snvs.vcf.gz {output.snv}
+        mv {output.dir}/results/variants/somatic.indels.vcf.gz.tbi {output.indeltbi}
+        mv {output.dir}/results/variants/somatic.snvs.vcf.gz.tbi {output.snvtbi}
 
+    else
+        touch {output.indel}
+        touch {output.snv}
+        touch {output.indeltbi}
+        touch {output.snvtbi}
     """
