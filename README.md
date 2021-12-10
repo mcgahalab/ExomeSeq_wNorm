@@ -1,4 +1,4 @@
-# Snakemake workflow: ExomeSeq with Normals
+# Snakemake workflow: ExomeSeq Tumor Vs Normals
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4737358.svg)](https://doi.org/10.5281/zenodo.4737358)
 [![Snakemake](https://img.shields.io/badge/snakemake-≥6.1.0-brightgreen.svg)](https://snakemake.github.io)
@@ -29,7 +29,7 @@
 
 ## About
 
-This workflow performs a ExomeSeq analysis with bwa, Mutect2, Mutect, Strelka, Varscan, Sequenza.
+This workflow performs a ExomeSeq analysis with bwa, Mutect2, Mutect, Strelka, Varscan, Sequenza while taking into consideration matched normals.
 It has been customized to work on the HPC4Health Slurm cluster and includes extra analysis to do genotype matching.
 
 Link to the original snakemake workflow: [RNAseq-Exome-snakemake/Snakemake/exome/](https://github.com/pmcc-modil/pipelines/tree/main/RNAseq-Exome-snakemake/Snakemake/exome)
@@ -57,7 +57,7 @@ salloc --partition=build -c 1 -t 2:0:0 --mem 2G
 conda activate snakemake
 
 cd ~/workflows
-git clone git@github.com:elsamah/ExomeSeq.git
+git clone git@github.com:elsamah/ExomeSeq_wNorm.git
 ```
 
 ### 2. Setup a blank analysis directory (Build/Project node)
