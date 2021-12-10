@@ -43,7 +43,7 @@ rule varscanSomatic:
         java -Xmx12g -jar {params.varscan}/VarScan.jar somatic --mpileup 1 --output-snp {output.snp} --output-indel {output.indel}
     else
         touch {output.snp}
-        touch {outpt.indel}
+        touch {output.indel}
     fi
     """
 
