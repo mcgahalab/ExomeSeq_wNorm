@@ -8,6 +8,7 @@ rule MuTect2:
     intervals = get_intervals,
     gatk="/cluster/home/selghamr/workflows/ExomeSeq/.snakemake/conda/9933b5f3a92c804102746a579b8a499c/opt/gatk-3.8",
     control=has_a_control,
+    dir="results/MuTect2/{sample}/",
   threads: 2
   conda:
     "/cluster/home/selghamr/workflows/ExomeSeq/workflow/envs/gatk.yaml",
@@ -22,7 +23,7 @@ rule MuTect2:
         --input_file:normal {input.normal} \
         -o {output} \
     else
-        mkdir -p results/MuTect2/{sample}/
+        mkdir -p {params.dir}
         touch {output}
     fi
     """
@@ -52,6 +53,7 @@ rule filterMuTect2:
     outdirsnv="results/MuTect2Merge/{sample}/{sample}.snvs",
     outdirindel="results/MuTect2Merge/{sample}/{sample}.indels",
     control=has_a_control,
+    dir="results/MuTect2Merge/{sample}/",
   output:
     snv="results/MuTect2Merge/{sample}/{sample}.snvs.recode.vcf",
     indel="results/MuTect2Merge/{sample}/{sample}.indels.recode.vcf"
@@ -64,7 +66,7 @@ rule filterMuTect2:
         vcftools --vcf {input.vcf} --remove-indels --recode --recode-INFO-all --out {params.outdirsnv} --remove-filtered-all
         vcftools --vcf {input.vcf} --keep-only-indels --recode --recode-INFO-all --out {params.outdirindel} --remove-filtered-all
     else
-        mkdir -p results/MuTect2Merge/{sample}/
+        mkdir -p {params.dir}
         touch {output.snv}
         touch {output.indel}
     fi

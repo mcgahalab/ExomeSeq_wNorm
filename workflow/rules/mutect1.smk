@@ -11,6 +11,7 @@ rule MuTect1:
   params:
     mutect="/cluster/home/selghamr/workflows/ExomeSeq/.snakemake/conda/ce5c78a09c5970de54b46955738bc233/share/mutect=1.1.6-1",
     control=has_a_control,
+    dir="results/MuTect1/{sample}/",
   threads: 2
 #  conda:
 #    "/cluster/home/selghamr/workflows/ExomeSeq/workflow/envs/mutect1.yaml",
@@ -30,7 +31,7 @@ rule MuTect1:
         --downsampling_type NONE \
         --fraction_contamination 0.02
     else
-        mkdir -p results/MuTect1/{sample}/
+        mkdir -p {params.dir}
         touch {output.vcf}
         touch {output.stats}
         touch {output.stats}

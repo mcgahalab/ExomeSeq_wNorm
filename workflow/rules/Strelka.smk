@@ -14,6 +14,7 @@ rule Strelka:
     snv="results/Strelka/{sample}/{sample}.myAnalysis/results/variants/{sample}_Slk_somatic.snvs.vcf.gz",
     indeltbi="results/Strelka/{sample}/{sample}.myAnalysis/results/variants/{sample}_Slk_somatic.indels.vcf.gz.tbi",
     snvtbi="results/Strelka/{sample}/{sample}.myAnalysis/results/variants/{sample}_Slk_somatic.snvs.vcf.gz.tbi",
+    tdir="results/Strelka/{sample}/{sample}.myAnalysis/results/variants/"
   threads: 4
   conda:
     "/cluster/home/selghamr/workflows/ExomeSeq/workflow/envs/strelka.yaml",
@@ -37,7 +38,7 @@ rule Strelka:
         mv {output.dir}/results/variants/somatic.indels.vcf.gz.tbi {output.indeltbi}
         mv {output.dir}/results/variants/somatic.snvs.vcf.gz.tbi {output.snvtbi}
     else
-        mkdr -p results/Strelka/{sample}/
+        mkdr -p {params.tdir}
         touch {output.indel}
         touch {output.snv}
         touch {output.indeltbi}
