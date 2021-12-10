@@ -30,6 +30,7 @@ rule MuTect1:
         --downsampling_type NONE \
         --fraction_contamination 0.02
     else
+        mkdir -p results/MuTect1/{sample}/
         touch {output.vcf}
         touch {output.stats}
         touch {output.stats}

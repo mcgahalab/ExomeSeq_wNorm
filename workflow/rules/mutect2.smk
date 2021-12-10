@@ -22,6 +22,7 @@ rule MuTect2:
         --input_file:normal {input.normal} \
         -o {output} \
     else
+        mkdir -p results/MuTect2/{sample}/
         touch {output}
     fi
     """
@@ -63,6 +64,7 @@ rule filterMuTect2:
         vcftools --vcf {input.vcf} --remove-indels --recode --recode-INFO-all --out {params.outdirsnv} --remove-filtered-all
         vcftools --vcf {input.vcf} --keep-only-indels --recode --recode-INFO-all --out {params.outdirindel} --remove-filtered-all
     else
+        mkdir -p results/MuTect2Merge/{sample}/
         touch {output.snv}
         touch {output.indel}
     fi
