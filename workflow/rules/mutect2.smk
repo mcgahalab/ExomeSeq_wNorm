@@ -5,7 +5,7 @@ rule MuTect2:
     ref = 'ref/genome.fa',
   output: "results/MuTect2/{sample}/{sample}_{interval}.mut2.vcf"
   params:
-    intervals = get_intervals
+    intervals = get_intervals,
     gatk="/cluster/home/selghamr/workflows/ExomeSeq/.snakemake/conda/9933b5f3a92c804102746a579b8a499c/opt/gatk-3.8",
     control=has_a_control,
   threads: 2
