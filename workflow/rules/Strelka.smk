@@ -38,7 +38,7 @@ rule Strelka:
         mv {output.dir}/results/variants/somatic.indels.vcf.gz.tbi {output.indeltbi}
         mv {output.dir}/results/variants/somatic.snvs.vcf.gz.tbi {output.snvtbi}
     else
-        mkdr -p {params.tdir}
+        mkdr -p {output.tdir}
         touch {output.indel}
         touch {output.snv}
         touch {output.indeltbi}
