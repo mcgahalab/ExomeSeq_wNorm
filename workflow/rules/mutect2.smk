@@ -21,7 +21,7 @@ rule MuTect2:
         -L {params.intervals} \
         --input_file:tumor {input.tumor} \
         --input_file:normal {input.normal} \
-        -o {output} \
+        -o {output}
     else
         mkdir -p {params.dir}
         touch {output}
