@@ -34,7 +34,7 @@ rule MuTect1:
         mkdir -p {params.dir}
         touch {output.vcf}
         touch {output.stats}
-        touch {output.stats}
+        touch {output.coverage}
     fi
     """
 
