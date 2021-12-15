@@ -23,7 +23,7 @@ rule Strelka:
     if [ '{params.control}' == 'True' ]; then
         ## configuration
         {params.strelka}/configureStrelkaSomaticWorkflow.py \
-        --normal={input.normal}  \
+        --normal={input.normal} \
         --tumor={input.tumor} \
         --ref={input.ref} \
         --config={input.conf} \
@@ -32,13 +32,13 @@ rule Strelka:
         ## running pipeline
         {output.dir}/runWorkflow.py -m local -j 20
 
-        echo "Current Dir: "$(pdir)
+        echo "Current Dir: "
         mv {output.dir}/results/variants/somatic.indels.vcf.gz {output.indel}
         mv {output.dir}/results/variants/somatic.snvs.vcf.gz {output.snv}
         mv {output.dir}/results/variants/somatic.indels.vcf.gz.tbi {output.indeltbi}
         mv {output.dir}/results/variants/somatic.snvs.vcf.gz.tbi {output.snvtbi}
     else
-        mkdir -p {output.tdir}/results/variants/
+        mkdir -p results/Strelka/{sample}/{sample}.myAnalysis/results/variants/
         touch {output.indel}
         touch {output.snv}
         touch {output.indeltbi}
