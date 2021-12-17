@@ -14,13 +14,23 @@ rule vcfIntersectINDEL:
     vcf_file="results/vcfIntersect/indels/{sample}/{indel}.vcf",
   shell:
     """
-    sh {params.script} \
-    {params.outdir}/indels \
-    {params.samp} \
-    {params.samp} \
-    {input.var_vcf} \
-    {input.mut2_vcf} \
-    {input.strelka_vcf}
+    if [ '{params.control}' == 'True' ]; then
+        sh {params.script} \
+        {params.outdir}/indels \
+        {params.samp} \
+        {params.samp} \
+        {input.var_vcf} \
+        {input.mut2_vcf} \
+        {input.strelka_vcf}
+    else
+        touch results/vcfIntersect/indels/{sample}.indels.recode.vcf.gz.tbi
+        touch results/vcfIntersect/indels/{sample}.indels.recode.vcf_sorted_left_aligned.vcf
+        touch results/vcfIntersect/indels/{sample}.indels.recode.vcf_sorted_left_aligned.vcf.idx
+        touch results/vcfIntersect/indels/{sample}.indels.recode.vcf_sorted.vcf
+        touch results/vcfIntersect/indels/{sample}.indels.recode.vcf_sorted.vcf.idx
+        mkdir -p results/vcfIntersect/indels/{sample}
+        touch results/vcfIntersect/indels/{sample}/{indel}.vcf
+    fi
     """
 rule vcfIntersectSNV:
   input:
@@ -32,18 +42,43 @@ rule vcfIntersectSNV:
   params:
     outdir="results/vcfIntersect",
     script= "scripts/vcfIntersect.sh",
-    samp="{sample}"
+    samp="{sample}",
+    control=has_a_control,
   output:
     #bash_snv="results/vcfIntersect/bash_scripts/{sample}_snvs_overlap.sh",
     vcf_file="results/vcfIntersect/snvs/{sample}/{snv}.vcf",
   shell:
     """
-    sh {params.script} \
-    {params.outdir}/snvs \
-    {params.samp} \
-    {params.samp} \
-    {input.mut1_vcf} \
-    {input.var_vcf} \
-    {input.mut2_vcf} \
-    {input.strelka_vcf}
+    if [ '{params.control}' == 'True' ]; then
+        sh {params.script} \
+        {params.outdir}/snvs \
+        {params.samp} \
+        {params.samp} \
+        {input.mut1_vcf} \
+        {input.var_vcf} \
+        {input.mut2_vcf} \
+        {input.strelka_vcf}
+    else
+        touch results/vcfIntersect/snvs/{sample}.snvs.recode.vcf.gz.tbi
+        touch results/vcfIntersect/snvs/{sample}.snvs.recode.vcf_sorted_left_aligned.vcf
+        touch results/vcfIntersect/snvs/{sample}.snvs.recode.vcf_sorted_left_aligned.vcf.idx
+        touch results/vcfIntersect/snvs/{sample}.snvs.recode.vcf_sorted.vcf
+        touch results/vcfIntersect/snvs/{sample}.snvs.recode.vcf_sorted.vcf.idx
+        mkdir -p results/vcfIntersect/snvs/{sample}
+        touch results/vcfIntersect/snvs/{sample}/{snv}.vcf
+    fi
     """
+
+
+
+
+
+
+GEN-00000-039-B.snvs.recode.vcf.gz.tbi
+GEN-00000-039-B.snvs.recode.vcf_sorted_left_aligned.vcf
+GEN-00000-039-B.snvs.recode.vcf_sorted_left_aligned.vcf.idx
+GEN-00000-039-B.snvs.recode.vcf_sorted.vcf
+GEN-00000-039-B.snvs.recode.vcf_sorted.vcf.idx
+
+expand("results/vcfIntersect/snvs/{sample}/{snv}.vcf", sample = samples["sample"], snv=snv_vcfs["snv"]),
+expand("results/vcfIntersect/indels/{sample}/{indel}.vcf", sample = samples["sample"], indel=indel_vcfs["indel"]),
