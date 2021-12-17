@@ -9,6 +9,7 @@ rule vcfIntersectINDEL:
     outdir="results/vcfIntersect",
     script= "scripts/vcfIntersect.sh",
     samp="{sample}",
+    indel="{indel}",
     control=has_a_control,
   output:
     #bash_indel="results/vcfIntersect/bash_scripts/{sample}_Indel_overlap.sh",
@@ -30,7 +31,7 @@ rule vcfIntersectINDEL:
         touch results/vcfIntersect/indels/{params.samp}.indels.recode.vcf_sorted.vcf
         touch results/vcfIntersect/indels/{params.samp}.indels.recode.vcf_sorted.vcf.idx
         mkdir -p results/vcfIntersect/indels/{params.samp}
-        touch results/vcfIntersect/indels/{params.samp}/{indel}.vcf
+        touch results/vcfIntersect/indels/{params.samp}/{params.indel}.vcf
     fi
     """
 rule vcfIntersectSNV:
@@ -44,6 +45,7 @@ rule vcfIntersectSNV:
     outdir="results/vcfIntersect",
     script= "scripts/vcfIntersect.sh",
     samp="{sample}",
+    snv="{snv}",
     control=has_a_control,
   output:
     #bash_snv="results/vcfIntersect/bash_scripts/{sample}_snvs_overlap.sh",
@@ -66,6 +68,6 @@ rule vcfIntersectSNV:
         touch results/vcfIntersect/snvs/{params.samp}.snvs.recode.vcf_sorted.vcf
         touch results/vcfIntersect/snvs/{params.samp}.snvs.recode.vcf_sorted.vcf.idx
         mkdir -p results/vcfIntersect/snvs/{params.samp}
-        touch results/vcfIntersect/snvs/{params.samp}/{snv}.vcf
+        touch results/vcfIntersect/snvs/{params.samp}/{params.snv}.vcf
     fi
     """
