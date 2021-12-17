@@ -24,13 +24,13 @@ rule vcfIntersectINDEL:
         {input.mut2_vcf} \
         {input.strelka_vcf}
     else
-        touch results/vcfIntersect/indels/{sample}.indels.recode.vcf.gz.tbi
-        touch results/vcfIntersect/indels/{sample}.indels.recode.vcf_sorted_left_aligned.vcf
-        touch results/vcfIntersect/indels/{sample}.indels.recode.vcf_sorted_left_aligned.vcf.idx
-        touch results/vcfIntersect/indels/{sample}.indels.recode.vcf_sorted.vcf
-        touch results/vcfIntersect/indels/{sample}.indels.recode.vcf_sorted.vcf.idx
-        mkdir -p results/vcfIntersect/indels/{sample}
-        touch results/vcfIntersect/indels/{sample}/{indel}.vcf
+        touch results/vcfIntersect/indels/{params.samp}.indels.recode.vcf.gz.tbi
+        touch results/vcfIntersect/indels/{params.samp}.indels.recode.vcf_sorted_left_aligned.vcf
+        touch results/vcfIntersect/indels/{params.samp}.indels.recode.vcf_sorted_left_aligned.vcf.idx
+        touch results/vcfIntersect/indels/{params.samp}.indels.recode.vcf_sorted.vcf
+        touch results/vcfIntersect/indels/{params.samp}.indels.recode.vcf_sorted.vcf.idx
+        mkdir -p results/vcfIntersect/indels/{params.samp}
+        touch results/vcfIntersect/indels/{params.samp}/{indel}.vcf
     fi
     """
 rule vcfIntersectSNV:
@@ -60,12 +60,12 @@ rule vcfIntersectSNV:
         {input.mut2_vcf} \
         {input.strelka_vcf}
     else
-        touch results/vcfIntersect/snvs/{sample}.snvs.recode.vcf.gz.tbi
-        touch results/vcfIntersect/snvs/{sample}.snvs.recode.vcf_sorted_left_aligned.vcf
-        touch results/vcfIntersect/snvs/{sample}.snvs.recode.vcf_sorted_left_aligned.vcf.idx
-        touch results/vcfIntersect/snvs/{sample}.snvs.recode.vcf_sorted.vcf
-        touch results/vcfIntersect/snvs/{sample}.snvs.recode.vcf_sorted.vcf.idx
-        mkdir -p results/vcfIntersect/snvs/{sample}
-        touch results/vcfIntersect/snvs/{sample}/{snv}.vcf
+        touch results/vcfIntersect/snvs/{params.samp}.snvs.recode.vcf.gz.tbi
+        touch results/vcfIntersect/snvs/{params.samp}.snvs.recode.vcf_sorted_left_aligned.vcf
+        touch results/vcfIntersect/snvs/{params.samp}.snvs.recode.vcf_sorted_left_aligned.vcf.idx
+        touch results/vcfIntersect/snvs/{params.samp}.snvs.recode.vcf_sorted.vcf
+        touch results/vcfIntersect/snvs/{params.samp}.snvs.recode.vcf_sorted.vcf.idx
+        mkdir -p results/vcfIntersect/snvs/{params.samp}
+        touch results/vcfIntersect/snvs/{params.samp}/{snv}.vcf
     fi
     """
