@@ -52,7 +52,7 @@ rule vcftoMAFsnv:
         fi
     else
         mkdir -p results/MAF_38_final/snv/{params.samp}
-        touch results/vcfIntersect/snvs/{params.samp}/fil_{params.snv}.vcf
+        touch results/vcfIntersect/snvs/{params.samp}/fil_{params.snvs}.vcf
         touch results/MAF_38_final/snv/{params.samp}/{params.snvs}.maf
     fi
     """
