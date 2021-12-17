@@ -8,7 +8,8 @@ rule vcfIntersectINDEL:
   params:
     outdir="results/vcfIntersect",
     script= "scripts/vcfIntersect.sh",
-    samp="{sample}"
+    samp="{sample}",
+    control=has_a_control,
   output:
     #bash_indel="results/vcfIntersect/bash_scripts/{sample}_Indel_overlap.sh",
     vcf_file="results/vcfIntersect/indels/{sample}/{indel}.vcf",
@@ -68,17 +69,3 @@ rule vcfIntersectSNV:
         touch results/vcfIntersect/snvs/{sample}/{snv}.vcf
     fi
     """
-
-
-
-
-
-
-GEN-00000-039-B.snvs.recode.vcf.gz.tbi
-GEN-00000-039-B.snvs.recode.vcf_sorted_left_aligned.vcf
-GEN-00000-039-B.snvs.recode.vcf_sorted_left_aligned.vcf.idx
-GEN-00000-039-B.snvs.recode.vcf_sorted.vcf
-GEN-00000-039-B.snvs.recode.vcf_sorted.vcf.idx
-
-expand("results/vcfIntersect/snvs/{sample}/{snv}.vcf", sample = samples["sample"], snv=snv_vcfs["snv"]),
-expand("results/vcfIntersect/indels/{sample}/{indel}.vcf", sample = samples["sample"], indel=indel_vcfs["indel"]),
