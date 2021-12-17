@@ -49,6 +49,7 @@ rule vcftoMAFindel:
         fi
     else
         mkdir -p results/MAF_38_final/indel/{params.samp}
+        touch results/vcfIntersect/indels/{params.samp}/fil_{params.indel}.vcf
         touch results/MAF_38_final/indel/{params.samp}/{params.indel}.maf
     fi
     """
