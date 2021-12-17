@@ -46,7 +46,7 @@ rule vcftoMAFindel:
                 --normal-id unmatched \
                 --vcf-tumor-id {params.samp} \
                 --vcf-normal-id {params.samp}
-        fi        
+        fi
     else
         mkdir -p results/MAF_38_final/indel/{params.samp}
         touch results/MAF_38_final/indel/{params.samp}/{params.indel}.maf

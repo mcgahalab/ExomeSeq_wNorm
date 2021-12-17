@@ -16,6 +16,7 @@ rule vcftoMAFsnv:
     "../envs/VCFtoMAF.yaml",
   shell:
     """
+    if [ '{params.control}' == 'True' ]; then
         if [ {params.snvs} != '0002' ]; then
             bcftools view -f PASS {input.vcf_inter} > {output.vcf_fil};
             perl scripts/vcf2maf.pl \
