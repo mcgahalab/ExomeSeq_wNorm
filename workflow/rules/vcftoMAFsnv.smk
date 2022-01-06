@@ -47,8 +47,8 @@ rule vcftoMAFsnv:
                 --vep-path=ref/98 \
                 --vep-data=ref/98 \
                 --normal-id unmatched \
-                --vcf-tumor-id {params.samp} \
-                --vcf-normal-id {params.samp}
+                --vcf-tumor-id TUMOR \
+                --vcf-normal-id NORMAL
         fi
     else
         mkdir -p results/MAF_38_final/snv/{params.samp}
