@@ -6,6 +6,7 @@ rule vcftoMAFsnv:
   params:
     samp="{sample}",
     snvs = "{snv}",
+    control=has_a_control,
 #    snv = get_snvs,
 #    intersect = get_snv_intersects,
   output:
