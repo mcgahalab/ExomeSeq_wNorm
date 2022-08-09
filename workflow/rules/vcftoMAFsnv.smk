@@ -71,8 +71,8 @@ rule vcftoMAFsnv:
 
         fi
     else
-        mkdir -p results/MAF_38_final/indel/{params.samp}
-        touch results/vcfIntersect/indels/{params.samp}/fil_{params.indel}.vcf
-        touch results/MAF_38_final/indel/{params.samp}/{params.indel}.maf
+        mkdir -p results/MAF_38_final/snv/{params.samp}
+        touch results/vcfIntersect/snvs/{params.samp}/fil_{params.snvs}.vcf
+        touch results/MAF_38_final/snv/{params.samp}/{params.snvs}.maf
     fi
     """
