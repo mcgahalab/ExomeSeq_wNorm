@@ -1,51 +1,5 @@
-rule align_pe:
-    input:
-        fq1=get_map_reads_input_R1,
-        fq2=get_map_reads_input_R2,
-    output:
-        "results/star/pe/{sample}-{unit}/Aligned.sortedByCoord.out.bam",
-        "results/star/pe/{sample}-{unit}/Aligned.toTranscriptome.out.bam",
-        "results/star/pe/{sample}-{unit}/ReadsPerGene.out.tab",
-    log:
-        "logs/star-pe/{sample}-{unit}.log",
-    params:
-        index=config["star"]["star-genome"],
-        extra="--quantMode GeneCounts TranscriptomeSAM "
-        "--outSAMtype BAM SortedByCoordinate "
-        "--outFilterIntronMotifs RemoveNoncanonical "
-        "--chimSegmentMin 10 "
-        "--chimOutType SeparateSAMold "
-        "--outSAMunmapped Within "
-        "--sjdbGTFfile {} {}".format(
-            config["star"]["gtf"], config["star"]["params"]
-        ),
-    threads: 24
-    wrapper:
-        "v0.75.0/bio/star/align"
-
-rule align_se:
-    input:
-        fq1=get_map_reads_input_R1,
-    output:
-        "results/star/se/{sample}-{unit}/Aligned.sortedByCoord.out.bam",
-        "results/star/se/{sample}-{unit}/Aligned.toTranscriptome.out.bam",
-        "results/star/se/{sample}-{unit}/ReadsPerGene.out.tab",
-    log:
-        "logs/star-se/{sample}-{unit}.log",
-    params:
-        index=config["star"]["star-genome"],
-        extra="--quantMode GeneCounts TranscriptomeSAM "
-        "--outSAMtype BAM SortedByCoordinate "
-        "--outFilterIntronMotifs RemoveNoncanonical "
-        "--chimSegmentMin 10 "
-        "--chimOutType SeparateSAMold "
-        "--outSAMunmapped Within "
-        "--sjdbGTFfile {} {}".format(
-            config["star"]["gtf"], config["star"]["params"]
-        ),
-    threads: 24
-    wrapper:
-        "v0.75.0/bio/star/align"
+# adapted from: https://gatk.broadinstitute.org/hc/en-us/articles/360035535912
+# https://github.com/gatk-workflows/gatk4-data-processing/blob/master/processing-for-variant-discovery-gatk4.wdl
 
 rule mapFASTQ:
   input:
@@ -56,14 +10,15 @@ rule mapFASTQ:
     ref = config['ref_index']['genome'],
     conda=config['env']['conda_shell'],
     env=directory(config['env']['r41'])
-  threads: 4
+  threads: 16
   conda:
     # "/cluster/home/selghamr/workflows/ExomeSeq/workflow/envs/bwa.yaml",
   shell:
     """
     module load bwa/0.7.15
     
-    bwa mem -p -t4 \
+    bwa mem -K 100000000 \
+    -p -v 3 -t 16 -Y \
     -R "@RG\\tID:{wildcards.sample}\\tLB:Exome\\tSM:{wildcards.sample}\\tPL:ILLUMINA" \
     {params.ref} \
     {input.f1} \
@@ -78,7 +33,7 @@ rule samtoolsSORT:
     # "/cluster/home/selghamr/workflows/ExomeSeq/workflow/envs/bwa.yaml",
   shell:
     """
-    module load bwa/0.7.15
+    module load samtools/1.17
     
     samtools sort -@4 {input} > {output}
     """
@@ -88,13 +43,15 @@ rule samtoolsINDEX:
   output: "results/alignment/{sample}/{sample}_sorted.bam.bai"
   threads: 2
   conda:
-    "/cluster/home/selghamr/workflows/ExomeSeq/workflow/envs/bwa.yaml",
+    # "/cluster/home/selghamr/workflows/ExomeSeq/workflow/envs/bwa.yaml",
   shell:
     """
+    module load samtools/1.17
+    
     samtools index {input} > {output}
     """
 
-rule picardMarkDuplicates:
+rule MarkDuplicates:
   input:
     bam="results/alignment/{sample}/{sample}_sorted.bam",
     bai="results/alignment/{sample}/{sample}_sorted.bam.bai",
@@ -102,13 +59,54 @@ rule picardMarkDuplicates:
     dedup="results/alignment/{sample}/{sample}_sorted.dedup.bam",
     metrics="results/alignment/{sample}/{sample}_picardmetrics.txt"
   params:
-    picard="/cluster/home/selghamr/workflows/ExomeSeq/.snakemake/conda/9b770440ff173434e53ee101c7452a0a/share/picard-2.26.0-0"
   threads: 4
   conda:
-    "/cluster/home/selghamr/workflows/ExomeSeq/workflow/envs/bwa.yaml",
+    # "/cluster/home/selghamr/workflows/ExomeSeq/workflow/envs/bwa.yaml",
   shell:
     """
-    java -Xmx12g -jar {params.picard}/picard.jar MarkDuplicates INPUT={input.bam} OUTPUT={output.dedup} METRICS_FILE={output.metrics} ASSUME_SORTED=true MAX_RECORDS_IN_RAM=100000 VALIDATION_STRINGENCY=SILENT CREATE_INDEX=true USE_JDK_DEFLATER=true USE_JDK_INFLATER=true
+    module load gatk/4.2.5.0
+    
+     gatk --java-options "-Xmx12g" \
+      MarkDuplicates \
+      --INPUT {input.bam} \
+      --OUTPUT {output.dedup} \
+      --METRICS_FILE {output.metrics} \
+      --VALIDATION_STRINGENCY SILENT \
+      --OPTICAL_DUPLICATE_PIXEL_DISTANCE 2500 \
+      --ASSUME_SORT_ORDER "queryname" \
+      --CREATE_MD5_FILE true
+    """
+
+rule SortAndFixTags:
+  input:
+    bam="results/alignment/{sample}/{sample}_sorted.dedup.bam",
+  output:
+    bam="results/alignment/{sample}/{sample}.aligned.duplicate_marked.sorted.bam",
+    metrics="results/alignment/{sample}/{sample}_picardmetrics.txt"
+  params:
+    ref = config['ref_index']['genome'],
+  threads: 4
+  conda:
+    # "/cluster/home/selghamr/workflows/ExomeSeq/workflow/envs/bwa.yaml",
+  shell:
+    """
+    module load gatk/4.2.5.0
+    
+    gatk --java-options "-Xmx12g" \
+      SortSam \
+      --INPUT {input.bam} \
+      --OUTPUT /dev/stdout \
+      --SORT_ORDER "coordinate" \
+      --CREATE_INDEX false \
+      --CREATE_MD5_FILE false \
+      | \
+      gatk4 --java-options "-Xmx12g" \
+      SetNmMdAndUqTags \
+      --INPUT /dev/stdin \
+      --OUTPUT {output.bam} \
+      --CREATE_INDEX true \
+      --CREATE_MD5_FILE true \
+      --REFERENCE_SEQUENCE {params.ref}
     """
 
 rule gatkRealignerTargetCreator:
@@ -126,6 +124,8 @@ rule gatkRealignerTargetCreator:
     "/cluster/home/selghamr/workflows/ExomeSeq/workflow/envs/gatk.yaml",
   shell:
     """
+    module load gatk/4.2.5.0
+    
     gatk3 -Xmx8g -T RealignerTargetCreator \
     --disable_auto_index_creation_and_locking_when_reading_rods \
     -nt 4 \
