@@ -1,25 +1,85 @@
+rule align_pe:
+    input:
+        fq1=get_map_reads_input_R1,
+        fq2=get_map_reads_input_R2,
+    output:
+        "results/star/pe/{sample}-{unit}/Aligned.sortedByCoord.out.bam",
+        "results/star/pe/{sample}-{unit}/Aligned.toTranscriptome.out.bam",
+        "results/star/pe/{sample}-{unit}/ReadsPerGene.out.tab",
+    log:
+        "logs/star-pe/{sample}-{unit}.log",
+    params:
+        index=config["star"]["star-genome"],
+        extra="--quantMode GeneCounts TranscriptomeSAM "
+        "--outSAMtype BAM SortedByCoordinate "
+        "--outFilterIntronMotifs RemoveNoncanonical "
+        "--chimSegmentMin 10 "
+        "--chimOutType SeparateSAMold "
+        "--outSAMunmapped Within "
+        "--sjdbGTFfile {} {}".format(
+            config["star"]["gtf"], config["star"]["params"]
+        ),
+    threads: 24
+    wrapper:
+        "v0.75.0/bio/star/align"
+
+rule align_se:
+    input:
+        fq1=get_map_reads_input_R1,
+    output:
+        "results/star/se/{sample}-{unit}/Aligned.sortedByCoord.out.bam",
+        "results/star/se/{sample}-{unit}/Aligned.toTranscriptome.out.bam",
+        "results/star/se/{sample}-{unit}/ReadsPerGene.out.tab",
+    log:
+        "logs/star-se/{sample}-{unit}.log",
+    params:
+        index=config["star"]["star-genome"],
+        extra="--quantMode GeneCounts TranscriptomeSAM "
+        "--outSAMtype BAM SortedByCoordinate "
+        "--outFilterIntronMotifs RemoveNoncanonical "
+        "--chimSegmentMin 10 "
+        "--chimOutType SeparateSAMold "
+        "--outSAMunmapped Within "
+        "--sjdbGTFfile {} {}".format(
+            config["star"]["gtf"], config["star"]["params"]
+        ),
+    threads: 24
+    wrapper:
+        "v0.75.0/bio/star/align"
+
 rule mapFASTQ:
   input:
-    f1 =  get_r1,
-    f2 =  get_r2,
-    ref = 'ref/BWAgenome.fa'
+    f1=get_map_reads_input_R1,
+    f2=get_map_reads_input_R2
   output: temp("results/alignment/{sample}/{sample}.sam")
   params:
+    ref = config['ref_index']['genome'],
+    conda=config['env']['conda_shell'],
+    env=directory(config['env']['r41'])
   threads: 4
   conda:
-    "/cluster/home/selghamr/workflows/ExomeSeq/workflow/envs/bwa.yaml",
+    # "/cluster/home/selghamr/workflows/ExomeSeq/workflow/envs/bwa.yaml",
   shell:
     """
-    bwa mem -p -t4 -R "@RG\\tID:{wildcards.sample}\\tLB:Exome\\tSM:{wildcards.sample}\\tPL:ILLUMINA" {input.ref} {input.f1} {input.f2} > {output}
+    module load bwa/0.7.15
+    
+    bwa mem -p -t4 \
+    -R "@RG\\tID:{wildcards.sample}\\tLB:Exome\\tSM:{wildcards.sample}\\tPL:ILLUMINA" \
+    {params.ref} \
+    {input.f1} \
+    {input.f2} > {output}
     """
+
 rule samtoolsSORT:
   input: "results/alignment/{sample}/{sample}.sam"
   output: "results/alignment/{sample}/{sample}_sorted.bam"
   threads: 4
   conda:
-    "/cluster/home/selghamr/workflows/ExomeSeq/workflow/envs/bwa.yaml",
+    # "/cluster/home/selghamr/workflows/ExomeSeq/workflow/envs/bwa.yaml",
   shell:
     """
+    module load bwa/0.7.15
+    
     samtools sort -@4 {input} > {output}
     """
 

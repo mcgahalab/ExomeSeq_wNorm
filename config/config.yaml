@@ -3,6 +3,12 @@ bed_file: /cluster/projects/cesconlab/Projects/CDK4-6iRES_ERposBCa/Exome-seq/Pal
 indel_vcf: /cluster/projects/cesconlab/Projects/CDK4-6iRES_ERposBCa/Exome-seq/Palbo-RExomeseq2020/ExomeSeq/config/indels.tsv
 snv_vcf: /cluster/projects/cesconlab/Projects/CDK4-6iRES_ERposBCa/Exome-seq/Palbo-RExomeseq2020/ExomeSeq/config/snvs.tsv
 
+ref_index:
+  bwa-index: "/cluster/projects/mcgahalab/ref/genomes/human/GRCh38/BWAIndex"
+  genome: "/cluster/projects/mcgahalab/ref/genomes/human/GRCh38/genome.fasta"
+  # This reference file is made from rsem-prepare-reference, it will generate the reference.seq is not found
+  rsem: "/cluster/projects/mcgahalab/ref/genomes/human/GRCh38/rsemIndex/reference"
+
 intersects:
     snv:
         0001: +1
@@ -12,8 +18,11 @@ intersects:
         0001: +1
         0002: +2
 
+env:
+  conda_shell: "~/miniconda3/etc/profile.d/conda.sh"
+  r41: "/cluster/projects/mcgahalab/envs/r41"
+  
 # sample_file: /cluster/home/selghamr/workflows/intialize/ExomeSeq/config/samples.tsv
 # bed_file: /cluster/home/selghamr/workflows/intialize/ExomeSeq/config/hg38_bed.tsv
 # indel_vcf: /cluster/home/selghamr/workflows/intialize/ExomeSeq/config/indels.tsv
 # snv_vcf: /cluster/home/selghamr/workflows/intialize/ExomeSeq/config/snvs.tsv
-
