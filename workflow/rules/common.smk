@@ -6,12 +6,6 @@ from snakemake.utils import validate
 configfile: "config/config.yaml"
 validate(config, schema="../schemas/config.schema.yaml")
 
-samples = pd.read_table(
-    config["sample_file"]
-).set_index(
-    "sample", drop=False
-)
-
 def is_paired_end(sample):
     sample_units = units.loc[sample]
     fq2_null = sample_units["fq2"].isnull()
