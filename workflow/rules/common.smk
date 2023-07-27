@@ -6,6 +6,20 @@ from snakemake.utils import validate
 configfile: "config/config.yaml"
 validate(config, schema="../schemas/config.schema.yaml")
 
+samples = (
+    pd.read_csv(config["samples"], sep="\t", dtype={"sample_name": str})
+    .set_index("sample_name", drop=False)
+    .sort_index()
+)
+validate(samples, schema="../schemas/samples.schema.yaml")
+
+units = (
+    pd.read_csv(config["units"], sep="\t", dtype={"sample_name": str, "unit_name": str})
+    .set_index(["sample_name", "unit_name"], drop=False)
+    .sort_index()
+)
+validate(units, schema="../schemas/units.schema.yaml")
+
 def is_paired_end(sample):
     sample_units = units.loc[sample]
     fq2_null = sample_units["fq2"].isnull()
