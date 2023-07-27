@@ -1,8 +1,70 @@
+import glob
+import pandas as pd
+from snakemake.utils import validate
+#from snakemake.remote import FTP
+#ftp = FTP.RemoteProvider()
+configfile: "config/config.yaml"
+validate(config, schema="../schemas/config.schema.yaml")
+
 samples = pd.read_table(
     config["sample_file"]
 ).set_index(
     "sample", drop=False
 )
+
+def is_paired_end(sample):
+    sample_units = units.loc[sample]
+    fq2_null = sample_units["fq2"].isnull()
+    sra_null = sample_units["sra"].isnull()
+    paired = ~fq2_null | ~sra_null
+    all_paired = paired.all()
+    all_single = (~paired).all()
+    assert (
+        all_single or all_paired
+    ), "invalid units for sample {}, must be all paired end or all single end".format(
+        sample
+    )
+    return all_paired
+
+def get_map_reads_input_R1(wildcards):
+    if not is_activated("mergeReads"):
+        if config["trimming"]["activate"]:
+            return expand(
+                "results/trimmed/{sample}_{unit}_R1.fastq.gz",
+                unit=units.loc[wildcards.sample, "unit_name"],
+                sample=wildcards.sample,
+            )
+        unit = units.loc[wildcards.sample]
+        if all(pd.isna(unit["fq1"])):
+            # SRA sample (always paired-end for now)
+            accession = unit["sra"]
+            return expand("sra/{accession}_R1.fastq", accession=accession)
+        sample_units = units.loc[wildcards.sample]
+        return sample_units["fq1"]
+    if is_paired_end(wildcards.sample):
+        return "results/merged/{sample}_R1.fastq.gz"
+    return "results/merged/{sample}_single.fastq.gz"
+
+
+def get_map_reads_input_R2(wildcards):
+    if is_paired_end(wildcards.sample):
+        if not is_activated("mergeReads"):
+            if config["trimming"]["activate"]:
+                return expand(
+                    "results/trimmed/{sample}_{unit}_R1.fastq.gz",
+                    unit=units.loc[wildcards.sample, "unit_name"],
+                    sample=wildcards.sample,
+                )
+            unit = units.loc[wildcards.sample]
+            if all(pd.isna(unit["fq1"])):
+                # SRA sample (always paired-end for now)
+                accession = unit["sra"]
+                return expand("sra/{accession}_R2.fastq", accession=accession)
+            sample_units = units.loc[wildcards.sample]
+            return sample_units["fq2"]
+        return ("results/merged/{sample}_R2.fastq.gz",)
+    return ""
+
 
 def get_r1(wildcards):
     return samples.read1[wildcards.sample]
