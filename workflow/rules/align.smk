@@ -11,8 +11,6 @@ rule mapFASTQ:
     conda=config['env']['conda_shell'],
     env=directory(config['env']['r41'])
   threads: 16
-  conda:
-    # "/cluster/home/selghamr/workflows/ExomeSeq/workflow/envs/bwa.yaml",
   shell:
     """
     module load bwa/0.7.15
@@ -29,8 +27,6 @@ rule samtoolsSORT:
   input: "results/alignment/{sample}/{sample}.sam"
   output: "results/alignment/{sample}/{sample}_sorted.bam"
   threads: 4
-  conda:
-    # "/cluster/home/selghamr/workflows/ExomeSeq/workflow/envs/bwa.yaml",
   shell:
     """
     module load samtools/1.17
@@ -42,8 +38,6 @@ rule samtoolsINDEX:
   input: "results/alignment/{sample}/{sample}_sorted.bam"
   output: "results/alignment/{sample}/{sample}_sorted.bam.bai"
   threads: 2
-  conda:
-    # "/cluster/home/selghamr/workflows/ExomeSeq/workflow/envs/bwa.yaml",
   shell:
     """
     module load samtools/1.17
@@ -60,8 +54,6 @@ rule MarkDuplicates:
     metrics="results/alignment/{sample}/{sample}_picardmetrics.txt"
   params:
   threads: 4
-  conda:
-    # "/cluster/home/selghamr/workflows/ExomeSeq/workflow/envs/bwa.yaml",
   shell:
     """
     module load gatk/4.2.5.0
@@ -86,8 +78,6 @@ rule SortAndFixTags:
   params:
     ref = config['ref_index']['genome'],
   threads: 4
-  conda:
-    # "/cluster/home/selghamr/workflows/ExomeSeq/workflow/envs/bwa.yaml",
   shell:
     """
     module load gatk/4.2.5.0
@@ -107,6 +97,30 @@ rule SortAndFixTags:
       --CREATE_INDEX true \
       --CREATE_MD5_FILE true \
       --REFERENCE_SEQUENCE {params.ref}
+    """
+
+rule BaseRecalibrator:
+  input:
+    bam="results/alignment/{sample}/{sample}.aligned.duplicate_marked.sorted.bam",
+  output:
+    # bam="results/alignment/{sample}/{sample}.aligned.duplicate_marked.sorted.bam",
+    metrics="results/alignment/{sample}/{sample}.recal_data.csv"
+  params:
+    ref = config['ref_index']['genome'],
+  threads: 4
+  shell:
+    """
+    module load gatk/4.2.5.0
+    
+    gatk --java-options "-Xmx12g" \
+      BaseRecalibrator \
+      -R {params.ref} \
+      -I {input.bam} \
+      --use-original-qualities \
+      -O {output.metrics} \
+      --known-sites {params.dbsnp} \
+      --known-sites ~{sep=" --known-sites " known_indels_sites_VCFs} \
+      -L ~{sep=" -L " sequence_group_interval}
     """
 
 rule gatkRealignerTargetCreator:
