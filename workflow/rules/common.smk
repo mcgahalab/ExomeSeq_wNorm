@@ -87,15 +87,15 @@ def get_sample_control(wildcards, retself=True):
         control = control.split("_")
     return "_".join(control)
 
-intervals = pd.read_table(
-    config["bed_file"]
-).set_index(
-    "interval", drop=False
-)
-def get_intervals(wildcards):
-    inter = wildcards.interval
-    bed = "/cluster/projects/cesconlab/Projects/GENIUS/TGL10_legacy_data/ExomeSeqNorm/resources/hg38_bedV5/" + inter + ".bed"
-    return bed
+# intervals = pd.read_table(
+#     config["bed_file"]
+# ).set_index(
+#     "interval", drop=False
+# )
+# def get_intervals(wildcards):
+#     inter = wildcards.interval
+#     bed = "/cluster/projects/cesconlab/Projects/GENIUS/TGL10_legacy_data/ExomeSeqNorm/resources/hg38_bedV5/" + inter + ".bed"
+#     return bed
 
 def get_MuTect2_output(wildcards):
     res = []
@@ -107,22 +107,22 @@ def get_MuTect2_output(wildcards):
         )
     return res
 
-indel_vcfs = pd.read_table(
-    config["indel_vcf"]
-,dtype={'indel': object}).set_index(
-    "indel", drop=False
-)
-def get_indels(wildcards):
-    inter = wildcards.indel
-    indel = str(inter) + "_hg38" + ".vcf"
-    #indel = str(inter) + ".vcf"
-    return indel
+# indel_vcfs = pd.read_table(
+#     config["indel_vcf"]
+# ,dtype={'indel': object}).set_index(
+#     "indel", drop=False
+# )
+# def get_indels(wildcards):
+#     inter = wildcards.indel
+#     indel = str(inter) + "_hg38" + ".vcf"
+#     #indel = str(inter) + ".vcf"
+#     return indel
 
-snv_vcfs = pd.read_table(
-    config["snv_vcf"]
-,dtype={'snv': object}).set_index(
-    "snv", drop=False
-)
+# snv_vcfs = pd.read_table(
+#     config["snv_vcf"]
+# ,dtype={'snv': object}).set_index(
+#     "snv", drop=False
+# )
 
 def get_snvs(wildcards):
     inter = wildcards.snv
