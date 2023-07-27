@@ -2,12 +2,7 @@
 # with --use-conda --use-singularity
 #container: "docker://continuumio/miniconda3"
 
-#workdir: "/cluster/projects/mcgahalab/data/mcgahalab/sacher_nsclc_tslp/snakemake-workflow/"
-#workdir: "/cluster/projects/mcgahalab/data/mcgahalab/teresa/210121_A00827_0252_BH25WGDRXY_McGaha_Kebria/snakemake-workflow/"
-#workdir: "/cluster/projects/mcgahalab/data/mcgahalab/sara_MSM_SSM"
-#workdir: "/cluster/projects/mcgahalab/data/mcgahalab/INSPIRE"
-workdir: "/cluster/projects/mcgahalab/mcgahalab/data/mcgahalab/PASS/wgs/"
-#workdir: "/cluster/home/quever/workflows/initialize/rnaseq_test/"
+workdir: "/cluster/projects/mcgahalab/data/mcgahalab/PASS/wgs"
 
 ##### load rules #####
 include: "rules/common.smk"

@@ -7,16 +7,16 @@
 #SBATCH -p all
 #SBATCH --mem=2gb
 
-cd /cluster/home/selghamr/workflows/ExomeSeq
-condaprefix='/cluster/home/selghamr/workflows/ExomeSeq/.snakemake/conda'
+cd /cluster/home/quever/workflows/ExomeSeq_wNorm
+condaprefix='/cluster/home/quever/workflows/rna-seq-star-deseq2/.snakemake/conda'
 
 snakemake \
---jobs 6 \
+--jobs 15 \
 --profile slurm \
 --cluster-config slurm/cluster.json \
 --conda-frontend conda \
 --use-conda \
 --use-singularity \
 --conda-prefix ${condaprefix} \
---wrapper-prefix 'file:///cluster/home/selghamr/snakemake_wrappers/' \
+--wrapper-prefix 'file:///cluster/home/quever/downloads/snakemake-wrappers/' \
 --rerun-incomplete

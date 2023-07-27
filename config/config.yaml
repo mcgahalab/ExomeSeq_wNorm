@@ -1,7 +1,13 @@
-sample_file: /cluster/projects/cesconlab/Projects/CDK4-6iRES_ERposBCa/Exome-seq/Palbo-RExomeseq2020/ExomeSeq/config/samples.tsv
-bed_file: /cluster/projects/cesconlab/Projects/CDK4-6iRES_ERposBCa/Exome-seq/Palbo-RExomeseq2020/ExomeSeq/config/hg38_bed.tsv
-indel_vcf: /cluster/projects/cesconlab/Projects/CDK4-6iRES_ERposBCa/Exome-seq/Palbo-RExomeseq2020/ExomeSeq/config/indels.tsv
-snv_vcf: /cluster/projects/cesconlab/Projects/CDK4-6iRES_ERposBCa/Exome-seq/Palbo-RExomeseq2020/ExomeSeq/config/snvs.tsv
+samples: config/samples.tsv
+# path or URL to sequencing unit sheet (TSV format, columns: sample, unit, fq1, fq2)
+# Units are technical replicates (e.g. lanes, or resequencing of the same biological
+# sample).
+units: config/units.tsv
+
+# sample_file: /cluster/projects/cesconlab/Projects/CDK4-6iRES_ERposBCa/Exome-seq/Palbo-RExomeseq2020/ExomeSeq/config/samples.tsv
+# bed_file: /cluster/projects/cesconlab/Projects/CDK4-6iRES_ERposBCa/Exome-seq/Palbo-RExomeseq2020/ExomeSeq/config/hg38_bed.tsv
+# indel_vcf: /cluster/projects/cesconlab/Projects/CDK4-6iRES_ERposBCa/Exome-seq/Palbo-RExomeseq2020/ExomeSeq/config/indels.tsv
+# snv_vcf: /cluster/projects/cesconlab/Projects/CDK4-6iRES_ERposBCa/Exome-seq/Palbo-RExomeseq2020/ExomeSeq/config/snvs.tsv
 
 ref_index:
   bwa-index: "/cluster/projects/mcgahalab/ref/genomes/human/GRCh38/BWAIndex"
