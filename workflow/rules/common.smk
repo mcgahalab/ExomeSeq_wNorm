@@ -20,6 +20,12 @@ units = (
 )
 validate(units, schema="../schemas/units.schema.yaml")
 
+def is_activated(xpath):
+    c = config
+    for entry in xpath.split("/"):
+        c = c.get(entry, {})
+    return bool(c.get("activate", False))
+
 def is_paired_end(sample):
     sample_units = units.loc[sample]
     fq2_null = sample_units["fq2"].isnull()

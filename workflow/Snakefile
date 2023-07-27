@@ -25,8 +25,8 @@ include: "rules/align.smk"
 ##### target rules #####
 rule all:
   input:
-    expand("results/alignment/{sample}/{sample}_sorted.bam", sample = samples["sample"]),
-    expand("results/alignment/{sample}/{sample}.aligned.duplicate_marked.sorted.bam", sample = samples["sample"]),
+    expand("results/alignment/{sample}/{sample}_sorted.bam", sample = samples["sample_name"]),
+    expand("results/alignment/{sample}/{sample}.aligned.duplicate_marked.sorted.bam", sample = samples["sample_name"]),
     # expand("results/Haplotype/{sample}/{sample}.raw.snps.indels.vcf", sample = samples["sample"]),
     # expand("results/MuTect1/{sample}/{sample}.mut1.vcf", sample = samples["sample"]),
     # expand("results/MuTect1/{sample}/{sample}.call_stats", sample = samples["sample"]),
