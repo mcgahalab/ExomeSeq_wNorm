@@ -35,6 +35,7 @@ intersects:
 env:
   conda_shell: "~/miniconda3/etc/profile.d/conda.sh"
   r41: "/cluster/projects/mcgahalab/envs/r41"
+  picard: "/cluster/home/quever/miniconda3/envs/picard"
   
 # sample_file: /cluster/home/selghamr/workflows/intialize/ExomeSeq/config/samples.tsv
 # bed_file: /cluster/home/selghamr/workflows/intialize/ExomeSeq/config/hg38_bed.tsv

@@ -77,9 +77,12 @@ rule SortAndFixTags:
     metrics="results/alignment/{sample}/{sample}_picardmetrics.txt"
   params:
     ref = config['ref_index']['genome'],
+    conda = config['env']['conda_shell'],
+    env = config['env']['picard']
   threads: 4
   shell:
     """
+    source {params.conda} && conda activate {params.env};
     module load gatk/4.2.5.0
     
     gatk --java-options "-Xmx12g" \
