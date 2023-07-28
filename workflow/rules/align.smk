@@ -137,7 +137,7 @@ rule ApplyBQSR:
     bam="results/alignment/{sample}/{sample}.aligned.duplicate_marked.sorted.bam",
     recal="results/alignment/{sample}/{sample}.recal_data.csv"
   output:
-    bam="results/alignment/{sample}/{sample}..aligned.duplicates_marked.recalibrated.bam"
+    bam="results/alignment/{sample}/{sample}.aligned.duplicate_marked.recalibrated.bam"
   params:
     ref = config['ref_index']['genome'],
     dbsnp = config['snvdb']['dbsnp'],
