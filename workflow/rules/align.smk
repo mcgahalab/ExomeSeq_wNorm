@@ -48,7 +48,7 @@ rule samtoolsINDEX:
 rule MarkDuplicates:
   input:
     bam="results/alignment/{sample}/{sample}_sorted.bam",
-    bai="results/alignment/{sample}/{sample}_sorted.bam.bai",
+    bai="results/alignment/{sample}/{sample}_sorted.bam.bai"
   output:
     dedup="results/alignment/{sample}/{sample}_sorted.dedup.bam",
     metrics="results/alignment/{sample}/{sample}_picardmetrics.txt"
@@ -71,7 +71,7 @@ rule MarkDuplicates:
 
 rule SortAndFixTags:
   input:
-    bam="results/alignment/{sample}/{sample}_sorted.dedup.bam",
+    bam="results/alignment/{sample}/{sample}_sorted.dedup.bam"
   output:
     bam="results/alignment/{sample}/{sample}.aligned.duplicate_marked.sorted.bam",
     metrics="results/alignment/{sample}/{sample}_picardmetrics.txt"
@@ -101,12 +101,15 @@ rule SortAndFixTags:
 
 rule BaseRecalibrator:
   input:
-    bam="results/alignment/{sample}/{sample}.aligned.duplicate_marked.sorted.bam",
+    bam="results/alignment/{sample}/{sample}.aligned.duplicate_marked.sorted.bam"
   output:
     # bam="results/alignment/{sample}/{sample}.aligned.duplicate_marked.sorted.bam",
     metrics="results/alignment/{sample}/{sample}.recal_data.csv"
   params:
     ref = config['ref_index']['genome'],
+    dbsnp = config['snvdb']['dbsnp'],
+    dbmills = config['snvdb']['indels'],
+    dbindel = config['snvdb']['indels2'],
   threads: 4
   shell:
     """
@@ -119,6 +122,40 @@ rule BaseRecalibrator:
       --use-original-qualities \
       -O {output.metrics} \
       --known-sites {params.dbsnp} \
-      --known-sites ~{sep=" --known-sites " known_indels_sites_VCFs} \
-      -L ~{sep=" -L " sequence_group_interval}
+      --known-sites {params.dbmills} \
+      --known-sites {params.dbindel} \
+      -rf BadCigar \
+      -cov ReadGroupCovariate \
+      -cov ContextCovariate \
+      -cov CycleCovariate \
+      -cov QualityScoreCovariate \
+      -dt None
+    """
+
+rule ApplyBQSR:
+  input:
+    bam="results/alignment/{sample}/{sample}.aligned.duplicate_marked.sorted.bam",
+    recal="results/alignment/{sample}/{sample}.recal_data.csv"
+  output:
+    bam="results/alignment/{sample}/{sample}..aligned.duplicates_marked.recalibrated.bam"
+  params:
+    ref = config['ref_index']['genome'],
+    dbsnp = config['snvdb']['dbsnp'],
+    dbmills = config['snvdb']['indels'],
+    dbindel = config['snvdb']['indels2'],
+  threads: 4
+  shell:
+    """
+    module load gatk/4.2.5.0
+    
+    gatk --java-options "-Xmx12g" \
+      ApplyBQSR \
+      -R {params.ref} \
+      -I {input.bam} \
+      -O {output.bam} \
+      -bqsr {input.recal} \
+      --static-quantized-quals 10 --static-quantized-quals 20 --static-quantized-quals 30 \
+      --add-output-sam-program-record \
+      --create-output-bam-md5 \
+      --use-original-qualities
     """

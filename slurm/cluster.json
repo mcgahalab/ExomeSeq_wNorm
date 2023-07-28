@@ -13,23 +13,25 @@ samtoolsSORT:
   cpus-per-task : 2
   mem : 12G
 
-picardMarkDuplicates:
+MarkDuplicates:
   cpus-per-task : 4
   mem : 20G
   time : 1-00:00:00
 
-gatkRealignerTargetCreator:
+SortAndFixTags:
   cpus-per-task : 4
+  mem : 20G
   time : 1-00:00:00
 
-gatkIndelRealigner:
-  cpus-per-task : 2
-  mem : 12G
-
-gatkBaseRecalibrator:
+ApplyBQSR:
   cpus-per-task : 4
-  mem : 18G
+  mem : 20G
   time : 1-00:00:00
+
+BaseRecalibrator:
+  cpus-per-task : 4
+  mem : 20G
+  time : 2-00:00:00
 
 gatkPrintReads:
   cpus-per-task : 4
