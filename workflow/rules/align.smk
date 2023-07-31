@@ -74,6 +74,7 @@ rule SortAndFixTags:
     bam="results/alignment/{sample}/{sample}_sorted.dedup.bam"
   output:
     bam="results/alignment/{sample}/{sample}.aligned.duplicate_marked.sorted.bam",
+    tmp=temp("results/alignment/{sample}/{sample}.tmp.bam"),
     metrics="results/alignment/{sample}/{sample}_picardmetrics.txt"
   params:
     ref = config['ref_index']['genome'],
@@ -88,14 +89,14 @@ rule SortAndFixTags:
     gatk --java-options "-Xmx12g" \
       SortSam \
       --INPUT {input.bam} \
-      --OUTPUT /dev/stdout \
+      --OUTPUT {output.tmp} \
       --SORT_ORDER "coordinate" \
       --CREATE_INDEX false \
-      --CREATE_MD5_FILE false \
-      | \
-      gatk4 --java-options "-Xmx12g" \
+      --CREATE_MD5_FILE false;
+           
+    gatk --java-options "-Xmx12g" \
       SetNmMdAndUqTags \
-      --INPUT /dev/stdin \
+      --INPUT {output.tmp} \
       --OUTPUT {output.bam} \
       --CREATE_INDEX true \
       --CREATE_MD5_FILE true \
