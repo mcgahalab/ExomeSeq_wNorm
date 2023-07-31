@@ -127,12 +127,7 @@ rule BaseRecalibrator:
       -O {output.metrics} \
       --known-sites {params.dbsnp} \
       --known-sites {params.dbmills} \
-      --known-sites {params.dbindel} \
-      -cov ReadGroupCovariate \
-      -cov ContextCovariate \
-      -cov CycleCovariate \
-      -cov QualityScoreCovariate \
-      -dt None
+      --known-sites {params.dbindel}
     """
 
 rule ApplyBQSR:
