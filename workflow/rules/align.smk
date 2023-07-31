@@ -128,7 +128,6 @@ rule BaseRecalibrator:
       --known-sites {params.dbsnp} \
       --known-sites {params.dbmills} \
       --known-sites {params.dbindel} \
-      -rf BadCigar \
       -cov ReadGroupCovariate \
       -cov ContextCovariate \
       -cov CycleCovariate \
