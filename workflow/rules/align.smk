@@ -25,7 +25,7 @@ rule mapFASTQ:
 
 rule samtoolsSORT:
   input: "results/alignment/{sample}/{sample}.sam"
-  output: "results/alignment/{sample}/{sample}_sorted.bam"
+  output: temp("results/alignment/{sample}/{sample}_sorted.bam")
   threads: 4
   shell:
     """
@@ -36,7 +36,7 @@ rule samtoolsSORT:
 
 rule samtoolsINDEX:
   input: "results/alignment/{sample}/{sample}_sorted.bam"
-  output: "results/alignment/{sample}/{sample}_sorted.bam.bai"
+  output: temp("results/alignment/{sample}/{sample}_sorted.bam.bai")
   threads: 2
   shell:
     """
@@ -45,12 +45,38 @@ rule samtoolsINDEX:
     samtools index {input} > {output}
     """
 
+rule extractUnmapped:
+  input:
+    bam: "results/alignment/{sample}/{sample}_sorted.bam",
+    fq1: "data/{sample}.R1.merged.fastq.gz",
+    fq2: "data/{sample}.R2.merged.fastq.gz"
+  output:
+    sam=temp("results/alignment/{sample}/{sample}_unmapped.sam"),
+    unmappedid=temp("results/alignment/{sample}/{sample}_unmapped_ids.txt"),
+    fq1="results/alignment/{sample}/{sample}_unmapped.R1.fastq",
+    fq2="results/alignment/{sample}/{sample}_unmapped.R2.fastq"
+  threads: 2
+  params:
+    seqtkdir: config['env']['seqktdir']
+  shell:
+    """
+    module load samtools/1.17
+    module load seqtk/git
+    module load bedtools/2.27.1
+    
+    samtools view -S -f4  {input} > {output.bam}
+    cut -f1 PANX_1213_unmapped.sam | sort | uniq > {output.unmappedid}
+    zcat {input.fq1} | {params.seqtkdir}/seqtk subseq . {output.unmappedid} > {output.fq1}
+    zcat {input.fq2} | {params.seqtkdir}/seqtk subseq . {output.unmappedid} > {output.fq2}
+    """
+    # {params.seqtkdir}/seqtk subseq PANX_1213.R1.merged.fastq unmapped_ids.lst > PANX_1213.unmapped.R1.fastq
+
 rule MarkDuplicates:
   input:
     bam="results/alignment/{sample}/{sample}_sorted.bam",
     bai="results/alignment/{sample}/{sample}_sorted.bam.bai"
   output:
-    dedup="results/alignment/{sample}/{sample}_sorted.dedup.bam",
+    dedup=temp("results/alignment/{sample}/{sample}_sorted.dedup.bam"),
     metrics="results/alignment/{sample}/{sample}_picardmetrics.txt"
   params:
   threads: 4
@@ -73,9 +99,8 @@ rule SortAndFixTags:
   input:
     bam="results/alignment/{sample}/{sample}_sorted.dedup.bam"
   output:
-    bam="results/alignment/{sample}/{sample}.aligned.duplicate_marked.sorted.bam",
-    tmp=temp("results/alignment/{sample}/{sample}.tmp.bam"),
-    metrics="results/alignment/{sample}/{sample}_picardmetrics.txt"
+    bam=temp("results/alignment/{sample}/{sample}.aligned.duplicate_marked.sorted.bam"),
+    tmp=temp("results/alignment/{sample}/{sample}.tmp.bam")
   params:
     ref = config['ref_index']['genome'],
     conda = config['env']['conda_shell'],
@@ -107,7 +132,6 @@ rule BaseRecalibrator:
   input:
     bam="results/alignment/{sample}/{sample}.aligned.duplicate_marked.sorted.bam"
   output:
-    # bam="results/alignment/{sample}/{sample}.aligned.duplicate_marked.sorted.bam",
     metrics="results/alignment/{sample}/{sample}.recal_data.csv"
   params:
     ref = config['ref_index']['genome'],
@@ -135,7 +159,7 @@ rule ApplyBQSR:
     bam="results/alignment/{sample}/{sample}.aligned.duplicate_marked.sorted.bam",
     recal="results/alignment/{sample}/{sample}.recal_data.csv"
   output:
-    bam="results/alignment/{sample}/{sample}.aligned.duplicate_marked.recalibrated.bam"
+    bam="results/alignment/{sample}.aligned.duplicate_marked.recalibrated.bam"
   params:
     ref = config['ref_index']['genome'],
     dbsnp = config['snvdb']['dbsnp'],
