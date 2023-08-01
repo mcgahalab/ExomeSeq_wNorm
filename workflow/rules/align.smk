@@ -47,9 +47,9 @@ rule samtoolsINDEX:
 
 rule extractUnmapped:
   input:
-    bam: "results/alignment/{sample}/{sample}_sorted.bam",
-    fq1: "data/{sample}.R1.merged.fastq.gz",
-    fq2: "data/{sample}.R2.merged.fastq.gz"
+    bam="results/alignment/{sample}/{sample}_sorted.bam",
+    fq1="data/{sample}.R1.merged.fastq.gz",
+    fq2="data/{sample}.R2.merged.fastq.gz"
   output:
     sam=temp("results/alignment/{sample}/{sample}_unmapped.sam"),
     unmappedid=temp("results/alignment/{sample}/{sample}_unmapped_ids.txt"),
