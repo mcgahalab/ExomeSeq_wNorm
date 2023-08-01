@@ -57,15 +57,15 @@ rule extractUnmapped:
     fq2="results/alignment/{sample}/{sample}_unmapped.R2.fastq"
   threads: 2
   params:
-    seqtkdir=config['env']['seqktdir']
+    seqtkdir=config['env']['seqtkdir']
   shell:
     """
     module load samtools/1.17
     module load seqtk/git
     module load bedtools/2.27.1
     
-    samtools view -S -f4  {input} > {output.bam}
-    cut -f1 PANX_1213_unmapped.sam | sort | uniq > {output.unmappedid}
+    samtools view -S -f4  {input} > {output.sam}
+    cut -f1 {output.sam} | sort | uniq > {output.unmappedid}
     zcat {input.fq1} | {params.seqtkdir}/seqtk subseq . {output.unmappedid} > {output.fq1}
     zcat {input.fq2} | {params.seqtkdir}/seqtk subseq . {output.unmappedid} > {output.fq2}
     """
