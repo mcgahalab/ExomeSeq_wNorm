@@ -47,7 +47,7 @@ rule samtoolsINDEX:
 
 rule extractUnmapped:
   input:
-    bam="results/alignment/{sample}/{sample}_sorted.bam",
+    bam="results/alignment/{sample}.aligned.duplicate_marked.recalibrated.bam",
     fq1="data/{sample}.R1.merged.fastq.gz",
     fq2="data/{sample}.R2.merged.fastq.gz"
   output:
@@ -66,10 +66,10 @@ rule extractUnmapped:
     
     samtools view -S -f4  {input} > {output.sam}
     cut -f1 {output.sam} | sort | uniq > {output.unmappedid}
-    zcat {input.fq1} | {params.seqtkdir}/seqtk subseq . {output.unmappedid} > {output.fq1}
-    zcat {input.fq2} | {params.seqtkdir}/seqtk subseq . {output.unmappedid} > {output.fq2}
+    {params.seqtkdir}/seqtk subseq $(zcat {input.fq1}) {output.unmappedid} > {output.fq1}
+    {params.seqtkdir}/seqtk subseq $(zcat {input.fq2}) {output.unmappedid} > {output.fq2}
     """
-    # {params.seqtkdir}/seqtk subseq PANX_1213.R1.merged.fastq unmapped_ids.lst > PANX_1213.unmapped.R1.fastq
+    #/cluster/projects/mcgahalab/bin/seqtk/seqtk subseq $(zcat PANX_1213.R1.merged.fastq.gz) unmapped_ids.lst > PANX_1213.unmapped.R1.fastq
 
 rule MarkDuplicates:
   input:
