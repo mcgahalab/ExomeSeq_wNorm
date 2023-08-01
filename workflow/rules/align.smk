@@ -57,7 +57,7 @@ rule extractUnmapped:
     fq2="results/alignment/{sample}/{sample}_unmapped.R2.fastq"
   threads: 2
   params:
-    seqtkdir: config['env']['seqktdir']
+    seqtkdir=config['env']['seqktdir']
   shell:
     """
     module load samtools/1.17
