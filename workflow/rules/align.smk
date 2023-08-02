@@ -10,14 +10,14 @@ rule mapFASTQ:
     ref = config['ref_index']['genome'],
     conda=config['env']['conda_shell'],
     env=directory(config['env']['r41'])
-  threads: 16
+  threads: 8
   shell:
     """
     module load bwa/0.7.15
     
     bwa mem -K 100000000 \
-    -p -v 3 -t 16 -Y \
-    -R "@RG\\tID:{wildcards.sample}\\tLB:Exome\\tSM:{wildcards.sample}\\tPL:ILLUMINA" \
+    -v 3 -t 8 -Y \
+    -R "@RG\\tID:{wildcards.sample}\\tLB:Genome\\tSM:{wildcards.sample}\\tPL:ILLUMINA" \
     {params.ref} \
     {input.f1} \
     {input.f2} > {output}
