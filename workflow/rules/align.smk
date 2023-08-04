@@ -5,7 +5,9 @@ rule mapFASTQ:
   input:
     f1=get_map_reads_input_R1,
     f2=get_map_reads_input_R2
-  output: temp("results/alignment/{sample}/{sample}.sam")
+  output:
+    bam=temp("results/alignment/{sample}/{sample}_sorted.bam"),
+    bai=temp("results/alignment/{sample}/{sample}_sorted.bam.bai")
   params:
     ref = config['ref_index']['genome'],
     conda=config['env']['conda_shell'],
@@ -14,35 +16,17 @@ rule mapFASTQ:
   shell:
     """
     module load bwa/0.7.15
+    module load samtools/1.17
     
     bwa mem -K 100000000 \
     -v 3 -t 8 -Y \
     -R "@RG\\tID:{wildcards.sample}\\tLB:Genome\\tSM:{wildcards.sample}\\tPL:ILLUMINA" \
     {params.ref} \
     {input.f1} \
-    {input.f2} > {output}
-    """
-
-rule samtoolsSORT:
-  input: "results/alignment/{sample}/{sample}.sam"
-  output: temp("results/alignment/{sample}/{sample}_sorted.bam")
-  threads: 4
-  shell:
-    """
-    module load samtools/1.17
+    {input.f2} | \
+    samtools sort -@8 - > {output.bam};
     
-    samtools sort -@4 {input} > {output}
-    """
-
-rule samtoolsINDEX:
-  input: "results/alignment/{sample}/{sample}_sorted.bam"
-  output: temp("results/alignment/{sample}/{sample}_sorted.bam.bai")
-  threads: 2
-  shell:
-    """
-    module load samtools/1.17
-    
-    samtools index {input} > {output}
+    samtools index {output.bam} > {output.bai}
     """
 
 rule extractUnmapped:
