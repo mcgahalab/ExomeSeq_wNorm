@@ -88,7 +88,8 @@ rule SortAndFixTags:
   params:
     ref = config['ref_index']['genome'],
     conda = config['env']['conda_shell'],
-    env = config['env']['picard']
+    env = config['env']['picard'],
+    tmpdir = "results/alignment/{sample}"
   threads: 4
   shell:
     """
@@ -101,6 +102,7 @@ rule SortAndFixTags:
       --OUTPUT {output.tmp} \
       --SORT_ORDER "coordinate" \
       --CREATE_INDEX false \
+      --TMP_DIR {params.tmpdir} \
       --CREATE_MD5_FILE false;
            
     gatk --java-options "-Xmx12g" \
