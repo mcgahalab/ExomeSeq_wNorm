@@ -69,7 +69,9 @@ rule MarkDuplicates:
     """
     module load gatk/4.2.5.0
     
-     gatk --java-options "-Xmx12g" \
+    mkdir -p {params.tmpdir}
+    
+    gatk --java-options "-Xmx12g" \
       MarkDuplicates \
       --INPUT {input.bam} \
       --OUTPUT {output.dedup} \
