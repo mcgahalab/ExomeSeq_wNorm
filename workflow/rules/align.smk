@@ -24,7 +24,7 @@ rule mapFASTQ:
     {params.ref} \
     {input.f1} \
     {input.f2} | \
-    samtools sort -@8 - > {output.bam};
+    samtools sort -@14 - > {output.bam};
     
     samtools index {output.bam} > {output.bai}
     """
@@ -63,6 +63,7 @@ rule MarkDuplicates:
     dedup=temp("results/alignment/{sample}/{sample}_sorted.dedup.bam"),
     metrics="results/alignment/{sample}/{sample}_picardmetrics.txt"
   params:
+    tmpdir = "results/alignment/{sample}/markdup"
   threads: 4
   shell:
     """
@@ -76,6 +77,7 @@ rule MarkDuplicates:
       --VALIDATION_STRINGENCY SILENT \
       --OPTICAL_DUPLICATE_PIXEL_DISTANCE 2500 \
       --ASSUME_SORT_ORDER "queryname" \
+      --TMP_DIR {params.tmpdir} \
       --CREATE_MD5_FILE true
     """
 
