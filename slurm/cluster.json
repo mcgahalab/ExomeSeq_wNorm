@@ -6,8 +6,9 @@ __default__:
 
 mapFASTQ:
   cpus-per-task : 14
-  mem : 29G
-  time : 3-00:00:00
+  mem : 59G
+  partition : 'himem'
+  time : 4-00:00:00
 
 samtoolsSORT:
   cpus-per-task : 2
@@ -15,22 +16,22 @@ samtoolsSORT:
 
 MarkDuplicates:
   cpus-per-task : 4
-  mem : 20G
+  mem : 29G
   time : 1-00:00:00
 
 SortAndFixTags:
   cpus-per-task : 4
-  mem : 20G
+  mem : 29G
   time : 1-00:00:00
 
 ApplyBQSR:
   cpus-per-task : 4
-  mem : 20G
+  mem : 29G
   time : 1-00:00:00
 
 BaseRecalibrator:
   cpus-per-task : 4
-  mem : 20G
+  mem : 29G
   time : 2-00:00:00
 
 gatkPrintReads:

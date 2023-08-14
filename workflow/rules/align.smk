@@ -71,7 +71,7 @@ rule MarkDuplicates:
     
     mkdir -p {params.tmpdir}
     
-    gatk --java-options "-Xmx12g" \
+    gatk --java-options "-Xmx25g" \
       MarkDuplicates \
       --INPUT {input.bam} \
       --OUTPUT {output.dedup} \
@@ -100,7 +100,7 @@ rule SortAndFixTags:
     source {params.conda} && conda activate {params.env};
     module load gatk/4.2.5.0
     
-    gatk --java-options "-Xmx12g" \
+    gatk --java-options "-Xmx25g" \
       SortSam \
       --INPUT {input.bam} \
       --OUTPUT {output.tmp} \
@@ -133,7 +133,7 @@ rule BaseRecalibrator:
     """
     module load gatk/4.2.5.0
     
-    gatk --java-options "-Xmx12g" \
+    gatk --java-options "-Xmx25g" \
       BaseRecalibrator \
       -R {params.ref} \
       -I {input.bam} \
@@ -160,7 +160,7 @@ rule ApplyBQSR:
     """
     module load gatk/4.2.5.0
     
-    gatk --java-options "-Xmx12g" \
+    gatk --java-options "-Xmx25g" \
       ApplyBQSR \
       -R {params.ref} \
       -I {input.bam} \
