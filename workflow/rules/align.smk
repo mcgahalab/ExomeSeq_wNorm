@@ -32,11 +32,9 @@ rule mapFASTQ:
 rule extractUnmapped:
   input:
     bam="results/alignment/{sample}.aligned.duplicate_marked.recalibrated.bam",
-    fq1="data/{sample}.R1.merged.fastq.gz",
-    fq2="data/{sample}.R2.merged.fastq.gz"
   output:
-    sam=temp("results/alignment/{sample}/{sample}_unmapped.sam"),
-    unmappedid=temp("results/alignment/{sample}/{sample}_unmapped_ids.txt"),
+    unmappedbam=temp("results/alignment/{sample}/{sample}_unmapped.bam"),
+    unpaired="results/alignment/{sample}/{sample}_unmapped.unpaired.fastq",
     fq1="results/alignment/{sample}/{sample}_unmapped.R1.fastq",
     fq2="results/alignment/{sample}/{sample}_unmapped.R2.fastq"
   threads: 2
@@ -48,10 +46,19 @@ rule extractUnmapped:
     module load seqtk/git
     module load bedtools/2.27.1
     
-    samtools view -S -f4  {input} > {output.sam}
-    cut -f1 {output.sam} | sort | uniq > {output.unmappedid}
-    {params.seqtkdir}/seqtk subseq $(zcat {input.fq1}) {output.unmappedid} > {output.fq1}
-    {params.seqtkdir}/seqtk subseq $(zcat {input.fq2}) {output.unmappedid} > {output.fq2}
+    ## Extract unmapped reads
+    samtools view -b -f4  {input.bam} | \
+     samtools collate . -O > {output.unmappedbam}
+    
+    ## Extract fastq reads from the unmapped bam
+    java -jar $picard_dir/picard.jar \
+         SamToFastq \
+         INPUT={output.unmappedbam} \
+         FASTQ={output.fq1} \
+         SECOND_END_FASTQ={output.fq2} \
+         UNPAIRED_FASTQ={output.unpaired} \
+         VALIDATION_STRINGENCY=SILENT
+    
     """
     #/cluster/projects/mcgahalab/bin/seqtk/seqtk subseq $(zcat PANX_1213.R1.merged.fastq.gz) unmapped_ids.lst > PANX_1213.unmapped.R1.fastq
 
