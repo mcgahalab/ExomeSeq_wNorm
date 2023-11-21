@@ -43,11 +43,11 @@ rule extractUnmapped:
   shell:
     """
     module load samtools/1.17
-    module load  picard/2.10.9
+    module load picard/2.10.9
     
     ## Extract unmapped reads
     samtools view -b -f4  {input.bam} | \
-     samtools collate . -O > {output.unmappedbam}
+     samtools collate - -O > {output.unmappedbam}
     
     ## Extract fastq reads from the unmapped bam
     java -jar $picard_dir/picard.jar \
