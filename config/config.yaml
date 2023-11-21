@@ -22,6 +22,7 @@ ref_index:
   genome: "/cluster/projects/mcgahalab/ref/genomes/human/GRCh38/genome.fasta"
   # This reference file is made from rsem-prepare-reference, it will generate the reference.seq is not found
   rsem: "/cluster/projects/mcgahalab/ref/genomes/human/GRCh38/rsemIndex/reference"
+  chm13genome: "/cluster/projects/mcgahalab/ref/genomes/human/CHM13/GCF_009914755.1/GCF_009914755.1_T2T-CHM13v2.0_genomic"
 
 intersects:
     snv:

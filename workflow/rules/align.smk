@@ -73,7 +73,7 @@ rule AlignUnmappedToCHM13:
     fq2="results/alignment/{sample}/{sample}_chm13.unmapped.R2.fastq"
   threads: 2
   params:
-    chm13genome=config['env']['chm13genome']
+    chm13genome=config['ref_index']['chm13genome']
   shell:
     """
     module load bowtie2/2.4.5
