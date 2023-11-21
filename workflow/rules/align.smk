@@ -43,8 +43,7 @@ rule extractUnmapped:
   shell:
     """
     module load samtools/1.17
-    module load seqtk/git
-    module load bedtools/2.27.1
+    module load  picard/2.10.9
     
     ## Extract unmapped reads
     samtools view -b -f4  {input.bam} | \
