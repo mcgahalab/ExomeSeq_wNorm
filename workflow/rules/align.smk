@@ -61,6 +61,45 @@ rule extractUnmapped:
     """
     #/cluster/projects/mcgahalab/bin/seqtk/seqtk subseq $(zcat PANX_1213.R1.merged.fastq.gz) unmapped_ids.lst > PANX_1213.unmapped.R1.fastq
 
+rule AlignUnmappedToCHM13:
+  input:
+    fq1="results/alignment/{sample}/{sample}_unmapped.R1.fastq",
+    fq2="results/alignment/{sample}/{sample}_unmapped.R2.fastq"
+  output:
+    bam="results/alignment/{sample}/{sample}_chm13.bam"
+    unmappedbam=temp("results/alignment/{sample}/{sample}_chm13.unmapped.bam"),
+    unpaired="results/alignment/{sample}/{sample}_chm13.unmapped.unpaired.fastq",
+    fq1="results/alignment/{sample}/{sample}_chm13.unmapped.R1.fastq",
+    fq2="results/alignment/{sample}/{sample}_chm13.unmapped.R2.fastq"
+  threads: 2
+  params:
+    chm13genome=config['env']['chm13genome']
+  shell:
+    """
+    module load bowtie2/2.4.5
+    module load samtools/1.17
+    module load picard/2.10.9
+    
+    bowtie2 -p 2 -q --local \
+        -x {params.chm13genome} \
+        -1 {input.fq1} \
+        -2 {input.fq2} | \
+        samtools view -bS - > {output.bam}
+    
+    ## Extract unmapped reads
+    samtools view -b -f4  {output.bam} | \
+     samtools collate - -O > {output.unmappedbam}
+    
+    ## Extract fastq reads from the unmapped bam
+    java -jar $picard_dir/picard.jar \
+         SamToFastq \
+         INPUT={output.unmappedbam} \
+         FASTQ={output.fq1} \
+         SECOND_END_FASTQ={output.fq2} \
+         UNPAIRED_FASTQ={output.unpaired} \
+         VALIDATION_STRINGENCY=SILENT
+    """
+
 rule MarkDuplicates:
   input:
     bam="results/alignment/{sample}/{sample}_sorted.bam",
