@@ -33,11 +33,15 @@ intersects:
         0001: +1
         0002: +2
 
+db:
+  kraken: "/cluster/projects/mcgahalab/ref/kraken"
+
 env:
   conda_shell: "~/miniconda3/etc/profile.d/conda.sh"
   r41: "/cluster/projects/mcgahalab/envs/r41"
   picard: "/cluster/home/quever/miniconda3/envs/picard"
   seqtkdir: "/cluster/projects/mcgahalab/bin/seqtk"
+  krakencontainer: "/cluster/projects/mcgahalab/envs/containers/krakenuniq"
   
 # sample_file: /cluster/home/selghamr/workflows/intialize/ExomeSeq/config/samples.tsv
 # bed_file: /cluster/home/selghamr/workflows/intialize/ExomeSeq/config/hg38_bed.tsv

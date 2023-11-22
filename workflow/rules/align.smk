@@ -66,7 +66,7 @@ rule AlignUnmappedToCHM13:
     fq1="results/alignment/{sample}/{sample}_unmapped.R1.fastq",
     fq2="results/alignment/{sample}/{sample}_unmapped.R2.fastq"
   output:
-    bam="results/alignment/{sample}/{sample}_chm13.bam"
+    bam="results/alignment/{sample}/{sample}_chm13.bam",
     unmappedbam=temp("results/alignment/{sample}/{sample}_chm13.unmapped.bam"),
     unpaired="results/alignment/{sample}/{sample}_chm13.unmapped.unpaired.fastq",
     fq1="results/alignment/{sample}/{sample}_chm13.unmapped.R1.fastq",
@@ -98,6 +98,32 @@ rule AlignUnmappedToCHM13:
          SECOND_END_FASTQ={output.fq2} \
          UNPAIRED_FASTQ={output.unpaired} \
          VALIDATION_STRINGENCY=SILENT
+    """
+
+rule KrakenUniq:
+  input:
+    fq1="results/alignment/{sample}/{sample}_chm13.unmapped.R1.fastq",
+    fq2="results/alignment/{sample}/{sample}_chm13.unmapped.R2.fastq"
+  output:
+    reportfile="results/metagenomics/reportfiles/reportfile.{sample}.tsv",
+    readclassification="results/metagenomics/classifications/readclassifcation.{sample}.tsv",
+    classified="results/metagenomics/classifications/classified.{sample}.txt",
+  threads: 2
+  params:
+    krakencontainer=config['env']['krakencontainer']
+    krakendb=config['db']['kraken']
+  shell:
+    """
+    module load apptainer/1.0.2
+    
+    apptainer exec {params.krakencontainer}/krakenuniq.sif \
+    krakenuniq --db {params.krakendb} \
+    --paired \
+    --classified-out {output.classified} \
+    --threads {threads} \
+    --report-file {output.reportfile} \
+    {input.fq1} {input.fq2} \
+    > {output.readclassification}
     """
 
 rule MarkDuplicates:
